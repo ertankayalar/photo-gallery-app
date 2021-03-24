@@ -1,12 +1,15 @@
+import React from 'react'
 import Layout from '../components/layout/layout'
 import Container from '../components/layout/container'
 
-export default function Home() {
+function Register() {
   return (
     <Layout>
-      <div>
-        <Container>hello world</Container>
-      </div>
+      <Container>
+        <h1>Register Page</h1>
+      </Container>
     </Layout>
   )
 }
+
+export default Register
