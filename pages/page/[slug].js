@@ -1,7 +1,7 @@
 import remark from 'remark'
 import html from 'remark-html'
-import Container from '../components/layout/container'
-import Layout from '../components/layout/layout'
+import Container from '../../components/layout/container'
+import Layout from '../../components/layout/layout'
 
 function Page({ page }) {
   const { title, content, slug } = page
