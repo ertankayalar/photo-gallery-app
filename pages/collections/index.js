@@ -4,8 +4,7 @@ import Layout from '../../components/layout/layout'
 import { COLLECTIONS_DATA } from '../../lib/constants'
 import CollectionList from '../../components/photos/collection-list'
 
-function CollectionsHome() {
-  const collections = COLLECTIONS_DATA
+function CollectionsHome({ collections }) {
   return (
     <Layout>
       <Container className='py-10 px-1'>
@@ -21,11 +20,9 @@ function CollectionsHome() {
 export default CollectionsHome
 
 export const getStaticProps = async () => {
-  const filePath = process.cwd() + '/../../collections.json'
-  console.log('filePath:', filePath)
-  const data = filePath
-
-  // const data = await res.json()
+  const { API_URL } = process.env
+  const res = await fetch(`${API_URL}/collections`)
+  const data = await res.json()
 
   return {
     props: { collections: data },

@@ -3,7 +3,24 @@ import Link from 'next/link'
 
 function CollectionCard({ collection }) {
   const { name, photos } = collection
+
   const thumbPhotos = photos.slice(0, 3)
+
+  let mainPhoto = ''
+  if (thumbPhotos[0] !== undefined) {
+    mainPhoto = (
+      <img src={thumbPhotos[0].photo.formats.small.url} className='rounded-l' />
+    )
+  }
+  let secondPhoto = ''
+  if (thumbPhotos[1] !== undefined) {
+    secondPhoto = thumbPhotos[1].photo.formats.small.url
+  }
+  let thirdPhoto = ''
+  if (thumbPhotos[0] !== undefined) {
+    thirdPhoto = thumbPhotos[2].photo.formats.small.url
+  }
+
   return (
     <Link href={`/collections/${collection.slug}`}>
       <a>
@@ -15,10 +32,7 @@ function CollectionCard({ collection }) {
                 paddingRight: '2px',
               }}
             >
-              <img
-                src={thumbPhotos[0].photo.formats.small.url}
-                className='rounded-l'
-              />
+              {mainPhoto}
             </div>
             <div className='w-1/4'>
               <div
@@ -30,7 +44,7 @@ function CollectionCard({ collection }) {
                 <div
                   className='h-full w-full bg-no-repeat bg-center bg-cover rounded-tr'
                   style={{
-                    backgroundImage: `url(${thumbPhotos[1].photo.formats.small.url})`,
+                    backgroundImage: `url(${secondPhoto})`,
                   }}
                 ></div>
               </div>
@@ -39,7 +53,7 @@ function CollectionCard({ collection }) {
                 <div
                   className='h-full bg-no-repeat bg-center bg-cover rounded-br'
                   style={{
-                    backgroundImage: `url(${thumbPhotos[2].photo.formats.small.url})`,
+                    backgroundImage: `url(${thirdPhoto})`,
                   }}
                 ></div>
               </div>

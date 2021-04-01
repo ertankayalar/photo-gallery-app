@@ -1,6 +1,5 @@
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
-import { COLLECTIONS_DATA } from '../../lib/constants'
 import PhotoCard from '../../components/photos/card'
 
 function CollectionPage({ collection }) {
@@ -23,10 +22,19 @@ function CollectionPage({ collection }) {
 }
 
 export async function getStaticPaths() {
-  const collections = COLLECTIONS_DATA
-  const paths = collections.map((collection) => {
-    return '/collections/' + collection.slug
+  const { API_URL } = process.env
+  const res = await fetch(`${API_URL}/collections`)
+  const data = await res.json()
+  const paths = data.map((collection) => {
+    return {
+      params: {
+        slug: collection.slug,
+      },
+    }
   })
+
+  console.log(paths)
+
   return {
     paths,
     fallback: false,
@@ -35,14 +43,13 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params
-  const collections = COLLECTIONS_DATA
-  const collection = collections.find((collection) => {
-    return collection.slug.indexOf(slug) > -1
-  })
+  const { API_URL } = process.env
+  const res = await fetch(`${API_URL}/collections?slug=${slug}`)
+  const data = await res.json()
 
   return {
     props: {
-      collection,
+      collection: data[0],
     },
   }
 }
