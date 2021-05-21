@@ -2,14 +2,14 @@ import remark from 'remark'
 import html from 'remark-html'
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
+import PageHeader from '../../components/layout/page-header'
 
 function Page({ page }) {
   const { title, content, slug } = page
   return (
     <Layout>
-      <Container>
-        <h1 className='text-2xl font-semibold text-gray-800'>{title}</h1>
-      </Container>
+      <PageHeader title={title} />
+
       <Container>
         <div
           className='prose prose-lg'

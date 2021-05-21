@@ -20,7 +20,7 @@ function collection({ collection, api_url }) {
         </div>
       </Container>
       <Container>
-        <AddPhoto api_url={api_url} />
+        <AddPhoto api_url={api_url} collection={collection} />
       </Container>
       <Container>
         <div className='w-full px-5 py-10 '>

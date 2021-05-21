@@ -1,9 +1,12 @@
-export default function PageHeader({ title }) {
+import Container from './container'
+
+export default function PageHeader({ title, description }) {
   return (
-    <div className='w-full px-2'>
-      <h1 className='text-2xl lg:text-3xl py-3 lg:py-4 text-strong text-gray-700'>
-        {title}
-      </h1>
+    <div className='w-full bg-transparent text-gray-600'>
+      <Container className='py-20 mb-5 text-center'>
+        <h1 className='text-4xl  mb-3'>{title}</h1>
+        {description && <p className='text-md text-gray-500'>{description}</p>}
+      </Container>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Container from '../components/layout/container'
 import { useState } from 'react'
 import { setCookie } from 'nookies'
 import Router from 'next/router'
+import PageHeader from '../components/layout/page-header'
 
 function LoginPage() {
   const [username, setUsername] = useState('')
@@ -40,9 +41,7 @@ function LoginPage() {
   return (
     <Layout>
       <Container>
-        <h1>Login Page</h1>
-
-        <div className='flex items-center min-h-screen bg-white dark:bg-gray-900'>
+        <div className='flex min-h-screen bg-white dark:bg-gray-900'>
           <div className='container mx-auto'>
             <div className='max-w-md mx-auto my-10'>
               <div className='text-center'>
@@ -69,7 +68,7 @@ function LoginPage() {
                       placeholder='you@example.com'
                       onChange={(e) => setUsername(e.target.value)}
                       value={username}
-                      className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                      className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
                     />
                   </div>
                   <div className='mb-6'>
@@ -82,7 +81,7 @@ function LoginPage() {
                       </label>
                       <a
                         href='#!'
-                        className='text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300'
+                        className='text-sm text-gray-400 focus:outline-none focus:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300'
                       >
                         Forgot password?
                       </a>
@@ -94,14 +93,14 @@ function LoginPage() {
                       placeholder='Your Password'
                       onChange={(e) => setPassword(e.target.value)}
                       value={password}
-                      className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                      className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
                     />
                   </div>
                   <div className='mb-6'>
                     <button
                       type='button'
                       onClick={() => handleLogin()}
-                      className='w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none'
+                      className='w-full px-3 py-4 text-white bg-gray-600 rounded-md focus:bg-gray-700 focus:outline-none'
                     >
                       Sign in
                     </button>
@@ -110,7 +109,7 @@ function LoginPage() {
                     Don&#x27;t have an account yet?{' '}
                     <a
                       href='#!'
-                      className='text-indigo-400 focus:outline-none focus:underline focus:text-indigo-500 dark:focus:border-indigo-800'
+                      className='text-gray-800 focus:outline-none focus:underline focus:text-gray-500 dark:focus:border-gray-800 hover:underline'
                     >
                       Sign up
                     </a>

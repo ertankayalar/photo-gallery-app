@@ -17,7 +17,7 @@ function CollectionCard({ collection }) {
     secondPhoto = thumbPhotos[1].photo.formats.small.url
   }
   let thirdPhoto = ''
-  if (thumbPhotos[0] !== undefined) {
+  if (thumbPhotos[2] !== undefined) {
     thirdPhoto = thumbPhotos[2].photo.formats.small.url
   }
 

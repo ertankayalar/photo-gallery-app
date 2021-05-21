@@ -4,7 +4,8 @@ import ProgressBar from '../ui/progress-bar'
 
 const calcPercent = (value, total) => Math.round((value / total) * 100)
 
-function AddPhoto({ api_url }) {
+function AddPhoto({ api_url, collection }) {
+  const API_URL = 'http://localhost:1337'
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [files, setFiles] = useState(null)
@@ -14,8 +15,9 @@ function AddPhoto({ api_url }) {
   const addPhotoHandler = async (event) => {
     event.preventDefault()
 
-    console.log('filess:', files)
-
+    console.log('Files =>', files)
+    let uploadedFiles = []
+    let uploadSuccess = false
     const data = new FormData()
     for (let i = 0; i < files.length; i++) {
       data.append('files', files[i])
@@ -24,14 +26,42 @@ function AddPhoto({ api_url }) {
     try {
       const uploadRes = await axios({
         method: 'POST',
-        url: `${api_url}/upload`,
+        url: `${API_URL}/upload`,
         data,
         onUploadProgress: (progress) =>
           setPercent(calcPercent(progress.loaded, progress.total)),
       })
-      console.log('uploadRes', uploadRes)
+      // buraya kadar completed dememesi gerekiyor
+      console.log('Upload Result =>', uploadRes)
+      if (uploadRes.status == 200) {
+        uploadedFiles = uploadRes.data
+        uploadSuccess = true
+      }
     } catch (err) {
       console.log('Exception Error', err)
+    }
+
+    console.log(`uploaded Files`, uploadedFiles)
+
+    if (uploadSuccess) {
+      const newPhoto = {
+        caption: name,
+        description: description,
+        photo: uploadedFiles[0].id, // id
+        collection_id: collection._id,
+      }
+      const add = await fetch(`${API_URL}/photos`, {
+        method: 'POST',
+        headers: {
+          // Authorization: `Bearer ${jwt}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPhoto),
+      })
+
+      const addResponse = await add.json()
+      console.log(`addResponse`, addResponse)
     }
   }
   return (

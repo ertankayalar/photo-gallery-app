@@ -1,15 +1,17 @@
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
+import PageHeader from '../../components/layout/page-header'
 import PhotoCard from '../../components/photos/card'
 
 function CollectionPage({ collection }) {
   const { name, description, photos } = collection
   return (
     <Layout>
-      <Container className='py-10 px-1'>
+      <PageHeader title={name} description={description} />
+      {/* <Container className='py-10 px-1'>
         <h1 className='text-2xl font-semibold text-gray-800'>{name}</h1>
         <p className='text-gray-600'>{description}</p>
-      </Container>
+      </Container> */}
       <Container>
         <div className='w-full grid grid-cols-3 gap-3'>
           {photos.map((photo) => (

@@ -8,6 +8,7 @@ function CollectionForm() {
   const [description, setDescription] = useState('')
   const [error, setError] = useState('')
   const [isAddCollection, setIsAddCollection] = useState(true)
+
   const addCollectionHandler = async (event) => {
     event.preventDefault()
     // add collection field
@@ -22,7 +23,7 @@ function CollectionForm() {
     const add = await fetch(`${API_URL}/collections`, {
       method: 'POST',
       headers: {
-        //  Authorization: `Bearer ${jwt}`,
+        // Authorization: `Bearer ${jwt}`,
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },

@@ -3,15 +3,15 @@ import Layout from '../../components/layout/layout'
 import Container from '../../components/layout/container'
 import { parseCookies } from 'nookies'
 import CollectionForm from '../../components/user/collection-form'
+import PageHeader from '../../components/layout/page-header'
 
 function Upload({ photos }) {
-  console.log(photos)
+  console.log(`photos`, photos)
   return (
     <Layout>
+      <PageHeader title='Upload Your Collection' />
       <Container>
-        <div>
-          <CollectionForm />
-        </div>
+        <CollectionForm />
       </Container>
     </Layout>
   )
@@ -50,6 +50,7 @@ export async function getServerSideProps(ctx) {
   //   },
   // })
 
+  //const res = await fetch(`${API_URL}/photos`)
   const photos = await res.json()
 
   return {
