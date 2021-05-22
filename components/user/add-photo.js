@@ -4,7 +4,7 @@ import ProgressBar from '../ui/progress-bar'
 
 const calcPercent = (value, total) => Math.round((value / total) * 100)
 
-function AddPhoto({ api_url, collection }) {
+function AddPhoto({ api_url, collection, upCollection, upText }) {
   const API_URL = 'http://localhost:1337'
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -62,6 +62,11 @@ function AddPhoto({ api_url, collection }) {
 
       const addResponse = await add.json()
       console.log(`addResponse`, addResponse)
+
+      upCollection(collection._id)
+      upText('addReponse completed')
+
+      // updateCollection
     }
   }
   return (
@@ -111,9 +116,11 @@ function AddPhoto({ api_url, collection }) {
               />
             </label>
             <ProgressBar percent={percent} />
-            <button className='bg-indigo-700 text-white py-2 px-3 my-5 rounded '>
-              Upload Photos
-            </button>
+            <div className='w-full flex items-center justify-center'>
+              <button className='bg-gray-700 text-white py-2 px-3 my-5 rounded  '>
+                Upload
+              </button>
+            </div>
           </div>
         </form>
       </div>
