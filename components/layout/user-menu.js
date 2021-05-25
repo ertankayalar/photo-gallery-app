@@ -35,9 +35,9 @@ function UserMenu() {
       )}
 
       {session && (
-        <Link href='/member/upload'>
+        <Link href='/member/profile'>
           <a className='w-full text-left  py-2 md:py-1 px-1 font-header md:w-auto hover:underline'>
-            Upload
+            My Profile
           </a>
         </Link>
       )}

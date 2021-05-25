@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/client'
 
 const AuthForm = () => {
+  const [loginError, setError] = useState('')
   const emailInputRef = useRef()
   const passwordInputRef = useRef()
   const router = useRouter()
@@ -92,6 +93,7 @@ const AuthForm = () => {
                   Sign in
                 </button>
               </div>
+              <div className='text-red-600 w-full py-3'>{loginError}</div>
               <p className='text-sm text-center text-gray-400'>
                 Don&#x27;t have an account yet?{' '}
                 <a

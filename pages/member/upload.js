@@ -1,12 +1,13 @@
 import React from 'react'
 import Layout from '../../components/layout/layout'
 import Container from '../../components/layout/container'
-import { parseCookies } from 'nookies'
 import CollectionForm from '../../components/user/collection-form'
 import PageHeader from '../../components/layout/page-header'
+import { getSession } from 'next-auth/client'
 
-function Upload({ photos }) {
+function Upload({ photos, session }) {
   console.log(`photos`, photos)
+  console.log(`session`, session)
   return (
     <Layout>
       <PageHeader title='Upload Your Collection' />
@@ -17,7 +18,7 @@ function Upload({ photos }) {
   )
 }
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps({ req }) {
   const { API_URL } = process.env
 
   // const loginInfo = {
@@ -36,12 +37,18 @@ export async function getServerSideProps(ctx) {
 
   // const loginRes = await login.json()
 
-  const jwt = parseCookies(ctx).jwt
+  //  const jwt = parseCookies(ctx).jwt
+
+  console.log('upload requst session')
+  let headers = {}
+  const session = await getSession({ req })
+  if (session) {
+    headers = { Authorization: `Bearer ${session.jwt}` }
+  }
+  console.log(`getSession **>`, session)
 
   const res = await fetch(`${API_URL}/photos`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-    },
+    headers: headers,
   })
 
   // const res = await fetch(`${API_URL}/photos`, {
@@ -59,5 +66,7 @@ export async function getServerSideProps(ctx) {
     },
   }
 }
+
+Upload.auth = true
 
 export default Upload

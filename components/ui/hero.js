@@ -24,7 +24,7 @@ const Hero = () => {
                   aria-hidden='true'
                   focusable='false'
                   data-icon='cloud-upload-alt'
-                  class='h-8 w-8 ml-3 text-white'
+                  className='h-8 w-8 ml-3 text-white'
                   role='img'
                   xmlns='http://www.w3.org/2000/svg'
                   viewBox='0 0 640 512'
