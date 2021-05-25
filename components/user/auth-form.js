@@ -14,9 +14,6 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value
     const enteredPassword = passwordInputRef.current.value
 
-    console.log(`enteredEmail`, enteredEmail)
-    console.log(`enteredPassword`, enteredPassword)
-
     const response = await signIn('credentials', {
       redirect: false,
       username: enteredEmail,
