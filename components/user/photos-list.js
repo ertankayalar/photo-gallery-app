@@ -4,7 +4,6 @@ const PhotoList = ({ photos }) => {
   const [colPhotos, setColPhotos] = useState(photos)
   return (
     <div className='w-full'>
-      e
       {colPhotos &&
         colPhotos.map((photo) => {
           {

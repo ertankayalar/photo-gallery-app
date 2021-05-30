@@ -1,37 +1,35 @@
 import React from 'react'
-import AuthLayout from '../../components/user/auth-layout'
+import Layout from '../../components/layout/layout'
 import Container from '../../components/layout/container'
 import PageHeader from '../../components/layout/page-header'
+import CollectionList from '../../components/user/user-collection-list'
 import { useSession, getSession } from 'next-auth/client'
+import axios from 'axios'
+import Link from 'next/link'
 
-function MyCollections({ photos, session, req }) {
-  console.log(photos)
-  console.log(`session==>`, session)
-
-  // async function getTest(req) {
-  //   const secret = process.env.JWT_SECRET
-  //   const token = await jwt.getToken({ req, secret })
-  //   if (token) {
-  //     // Signed in
-  //     console.log('JSON Web Token', JSON.stringify(token, null, 2))
-  //   } else {
-  //     // Not Signed in
-  //     res.status(401)
-  //   }
-  // }
-  //  getTest()
+function MyCollections({ collections, session, req }) {
+  console.log('collections', collections)
+  console.log('session', session)
 
   return (
-    <AuthLayout>
+    <Layout>
       <PageHeader title='My Collections' />
-      <Container>user collections</Container>
-    </AuthLayout>
+      <Container className='w-full flex items-center justify-center  '>
+        <Link href='/member/collection/add'>
+          <a className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'>
+            New Collection
+          </a>
+        </Link>
+      </Container>
+      <Container className='py-10'>
+        <CollectionList collections={collections} />
+      </Container>
+    </Layout>
   )
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  console.log(`session server side`, session)
   if (!session) {
     return {
       redirect: {
@@ -41,10 +39,23 @@ export async function getServerSideProps(context) {
     }
   }
 
-  // get token
+  let headers = {}
+  //const session = await getSession({ req })
+  if (session) {
+    headers = { Authorization: `Bearer ${session.jwt}` }
+  }
+  const resUserCollections = await axios.get(
+    `${process.env.API_URL}/collections?user=${session.user.id}`
+  )
+
+  if (resUserCollections.error) {
+    console.log('Error:', resUserCollections.error)
+  }
+
+  const collections = resUserCollections.data
 
   return {
-    props: { session },
+    props: { session, collections },
   }
 }
 

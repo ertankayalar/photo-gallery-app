@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Container from '../../components/layout/container'
-import Router from 'next/router'
-import axios from 'axios'
 
-function CollectionForm({ session, api_url, collection = null }) {
+const UserCollectionForm = ({ collection = null, onSubmit }) => {
   const [id, setId] =
     collection != null ? useState(collection.id) : useState('')
   const [name, setName] =
@@ -11,43 +9,34 @@ function CollectionForm({ session, api_url, collection = null }) {
   const [description, setDescription] =
     collection != null ? useState(collection.description) : useState('')
   const [error, setError] = useState('')
-  const [isAddCollection, setIsAddCollection] = useState(true)
+  const [statusMsg, setStatusMsg] = useState('')
+  const formTitle = collection == null ? 'New Collection' : 'Update Collection'
+  const submitButtonText = collection == null ? 'Add' : 'Update'
 
-  const addCollectionHandler = async (event) => {
+  async function submitHandler(event) {
     event.preventDefault()
-    if (session) {
-      const resAddCollection = await axios.post(
-        `${api_url}/collections`,
-        {
-          name: name,
-          description: description,
-          user: session.user.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
 
-      if (resAddCollection.error) {
-        console.log('Error:', resAddCollection.error)
-      }
-      console.log('resAddCollection', resAddCollection)
+    // check required fields
 
-      if (resAddCollection.status == 200) {
-        Router.push(`/member/collection/${resAddCollection.data.id}`)
-      }
-    }
+    // if ok then
+    console.info('form submit handler here')
+    const result = await onSubmit({
+      id: id,
+      name: name,
+      description: description,
+    })
+
+    console.log('result form', result)
+    setStatusMsg(result.data.status_message)
   }
 
   return (
     <Container>
       <div>
-        <form onSubmit={addCollectionHandler}>
+        <form onSubmit={submitHandler}>
           <div className='border w-full px-5 py-8 my-10  mx-auto rounded bg-gray-50'>
             <div className='w-full text-center'>
-              <h2 className='text-2xl text-gray-700 my-3'>New Collection</h2>
+              <h2 className='text-2xl text-gray-700 my-3'>{formTitle}</h2>
               <p className='text-gray-500 text-sm'>
                 Describe your collection details
               </p>
@@ -78,20 +67,21 @@ function CollectionForm({ session, api_url, collection = null }) {
             </label>
             <div className='flex items-center justify-center'>
               <button className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'>
-                Add Collection
+                {submitButtonText}
               </button>
             </div>
           </div>
         </form>
+        <p>{statusMsg}</p>
       </div>
       {error && (
         <div className='w-1/2 bg-gray-50 border rounded p-5 my-5 mx-auto text-red-700'>
           <h3 className='text-red-700 text-lg font-semibold'>Error</h3>
-          {error}
+          <p>{error}</p>
         </div>
       )}
     </Container>
   )
 }
 
-export default CollectionForm
+export default UserCollectionForm

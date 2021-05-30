@@ -8,10 +8,7 @@ function CollectionPage({ collection }) {
   return (
     <Layout>
       <PageHeader title={name} description={description} />
-      {/* <Container className='py-10 px-1'>
-        <h1 className='text-2xl font-semibold text-gray-800'>{name}</h1>
-        <p className='text-gray-600'>{description}</p>
-      </Container> */}
+
       <Container>
         <div className='w-full grid grid-cols-3 gap-3'>
           {photos.map((photo) => (
