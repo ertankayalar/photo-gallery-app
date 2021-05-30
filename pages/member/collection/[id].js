@@ -113,7 +113,7 @@ function collection({ collection, api_url, session }) {
       const add = await fetch(`${api_url}/photos`, {
         method: 'POST',
         headers: {
-          // Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${session.jwt}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
