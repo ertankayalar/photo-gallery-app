@@ -21,7 +21,7 @@ const calcPercent = (value, total) => Math.round((value / total) * 100)
 // edit photos
 // edit collection
 
-function collection({ collection, api_url }) {
+function collection({ collection, api_url, session }) {
   console.log('collection', collection)
   const [userCollection, setUserCollection] = useState(collection)
   const [userPhotos, setUserPhotos] = useState(collection.photos)
@@ -29,6 +29,7 @@ function collection({ collection, api_url }) {
   const { id, name, description } = collection
   const [isPhotoModalOpen, setPhotoModalOpen] = useState(false)
   const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false)
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false)
 
   function photoModalHandler() {
     setPhotoModalOpen(true)
@@ -73,12 +74,20 @@ function collection({ collection, api_url }) {
     data.append('files', photoData.photoFiles[0])
 
     try {
-      const uploadRes = await axios({
-        method: 'POST',
-        url: `${api_url}/upload`,
-        data,
+      // const uploadRes = await axios({
+      //   method: 'POST',
+      //   url: `${api_url}/upload`,
+      //   data,
+      //   onUploadProgress: (progress) =>
+      //     setPercent(calcPercent(progress.loaded, progress.total)),
+      // })
+
+      const uploadRes = await axios.post(`${api_url}/upload`, data, {
         onUploadProgress: (progress) =>
           setPercent(calcPercent(progress.loaded, progress.total)),
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
       })
       // buraya kadar completed dememesi gerekiyor
       console.log('Upload Result =>', uploadRes)
@@ -86,6 +95,7 @@ function collection({ collection, api_url }) {
         console.log('upload success')
         uploadedFiles = uploadRes.data
         uploadSuccess = true
+        setIsUploadSuccess(true)
       }
     } catch (err) {
       console.log('Exception Error', err)
@@ -114,6 +124,9 @@ function collection({ collection, api_url }) {
       setUserPhotos([...userPhotos, addResponse])
     }
 
+    return {
+      uploadSuccess,
+    }
     // bundan sonra state management
 
     // add
@@ -205,6 +218,7 @@ function collection({ collection, api_url }) {
             onAddPhoto={addUserPhotoHandler}
             percent={percent}
             onCancel={closeModalHandler}
+            isUploadSuccess={isUploadSuccess}
           />
         </Container>
       )}
@@ -266,6 +280,7 @@ export async function getServerSideProps(context) {
     props: {
       collection: resEditcollection.data,
       api_url: API_URL,
+      session,
     },
   }
 }

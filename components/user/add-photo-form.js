@@ -8,6 +8,7 @@ const AddPhotoForm = (props) => {
   const photoRef = useRef()
   const [error, setError] = useState('')
   const [files, setFiles] = useState(null)
+  const [message, setMessage] = useState('')
 
   function submitHandler(event) {
     event.preventDefault()
@@ -19,11 +20,15 @@ const AddPhotoForm = (props) => {
     console.log('enteredPhoto', enteredPhoto)
     console.log('files', files)
 
-    props.onAddPhoto({
+    const result = props.onAddPhoto({
       caption: enteredCaption,
       description: enteredDescription,
       photoFiles: files,
     })
+
+    if (props.isUploadSuccess) {
+      setMessage('Upload completed')
+    }
   }
 
   function closeHandler(event) {
@@ -70,6 +75,7 @@ const AddPhotoForm = (props) => {
               />
             </label>
             <ProgressBar percent={props.percent} />
+            <p>{message}</p>
             <div className='w-full flex items-center justify-center'>
               <button className='bg-blue-700 text-white py-2 px-3 my-5 rounded  '>
                 Upload
