@@ -1,16 +1,13 @@
 import React from 'react'
+import axios from 'axios'
+import Link from 'next/link'
+import { getSession } from 'next-auth/client'
 import Layout from '../../components/layout/layout'
 import Container from '../../components/layout/container'
 import PageHeader from '../../components/layout/page-header'
-import CollectionList from '../../components/user/user-collection-list'
-import { useSession, getSession } from 'next-auth/client'
-import axios from 'axios'
-import Link from 'next/link'
+import CollectionList from '../../components/user/collection/list'
 
-function MyCollections({ collections, session, req }) {
-  console.log('collections', collections)
-  console.log('session', session)
-
+function MyCollections({ collections }) {
   return (
     <Layout>
       <PageHeader title='My Collections' />
@@ -39,20 +36,18 @@ export async function getServerSideProps(context) {
     }
   }
 
-  let headers = {}
-  //const session = await getSession({ req })
-  if (session) {
-    headers = { Authorization: `Bearer ${session.jwt}` }
-  }
-  const resUserCollections = await axios.get(
-    `${process.env.API_URL}/collections?user=${session.user.id}`
+  const result = await axios.get(
+    `${process.env.API_URL}/collections?user=${session.user.id}`,
+    {
+      headers: { Authorization: `Bearer ${session.jwt}` },
+    }
   )
 
-  if (resUserCollections.error) {
-    console.log('Error:', resUserCollections.error)
+  if (result.error) {
+    console.log('Error:', result.error)
   }
 
-  const collections = resUserCollections.data
+  const collections = result.data
 
   return {
     props: { session, collections },

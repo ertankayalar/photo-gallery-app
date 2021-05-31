@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
+import { getSession } from 'next-auth/client'
 import Layout from '../../../components/layout/layout'
 import Container from '../../../components/layout/container'
-import CollectionForm from '../../../components/user/collection-form'
 import UserCollectionForm from '../../../components/user/collection/form'
-import { getSession } from 'next-auth/client'
 
 const AddCollection = ({ session, api_url }) => {
   async function addCollectionHandler(data) {

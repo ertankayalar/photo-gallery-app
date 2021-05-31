@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from './user-collection-card'
+import Card from './card'
 function UserCollectionList({ collections }) {
   return (
     <div className='grid grid-cols-2 gap-4 px-1 py-2'>
