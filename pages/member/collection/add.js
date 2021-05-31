@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
 import Layout from '../../../components/layout/layout'
 import Container from '../../../components/layout/container'
-import PageHeader from '../../../components/layout/page-header'
 import CollectionForm from '../../../components/user/collection-form'
-import { useSession, getSession } from 'next-auth/client'
+import UserCollectionForm from '../../../components/user/collection/form'
+import { getSession } from 'next-auth/client'
 
 const AddCollection = ({ session, api_url }) => {
+  async function addCollectionHandler(data) {
+    const result = await axios.post('/api/collection/add', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    return result
+  }
+
   return (
     <Layout>
       <Container>
-        <CollectionForm session={session} api_url={api_url} />
+        <UserCollectionForm onSubmit={addCollectionHandler} />
       </Container>
     </Layout>
   )

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
+import Router from 'next/router'
 import Container from '../../../components/layout/container'
 
 const UserCollectionForm = ({ collection = null, onSubmit }) => {
   const [id, setId] =
-    collection != null ? useState(collection.id) : useState('')
+    collection != null ? useState(collection.id) : useState(null)
   const [name, setName] =
     collection != null ? useState(collection.name) : useState('')
   const [description, setDescription] =
@@ -19,15 +20,22 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
     // check required fields
 
     // if ok then
-    console.info('form submit handler here')
+    //    console.info('form submit handler here')
+
     const result = await onSubmit({
       id: id,
       name: name,
       description: description,
     })
 
-    console.log('result form', result)
-    setStatusMsg(result.data.status_message)
+    // console.log('result form', result)
+    // setStatusMsg(result.data.status_message)
+
+    // redirect to view
+
+    if (result.status == 200) {
+      Router.push(`/member/collection/${result.data.id}`)
+    }
   }
 
   return (

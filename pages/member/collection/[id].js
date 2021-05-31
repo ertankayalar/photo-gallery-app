@@ -11,6 +11,12 @@ import DeleteIcon from '../../../components/ui/icon/delete'
 import UserPhotoCard from '../../../components/user/photo/card'
 import AddPhotoForm from '../../../components/user/photo/form'
 
+/**
+ *  Collection View
+ *
+ *
+ */
+
 const calcPercent = (value, total) => Math.round((value / total) * 100)
 
 // show collection and photos
@@ -18,7 +24,7 @@ const calcPercent = (value, total) => Math.round((value / total) * 100)
 // edit photos
 // edit collection
 
-function collection({ collection, api_url, session }) {
+function CollectionView({ collection, api_url, session }) {
   console.log('collection', collection)
   const [userCollection, setUserCollection] = useState(collection)
   const [userPhotos, setUserPhotos] = useState(collection.photos)
@@ -28,42 +34,48 @@ function collection({ collection, api_url, session }) {
   const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false)
   const [isUploadSuccess, setIsUploadSuccess] = useState(false)
 
+  // Open Photo Modal Handler
   function photoModalHandler() {
     setPhotoModalOpen(true)
   }
+
+  // Close Add Photo Modal Box
   function closeModalHandler() {
     setPhotoModalOpen(false)
   }
 
-  function collectionDeleteConfirmHandler() {
+  // Open Collection Delete Confirm Box
+  function openDeleteCollectionHandler() {
     setConfirmBoxOpen(true)
   }
 
-  function closeCollectionDeleteBoxHandler() {
+  // Close Collection Delete Confirm Box
+  function closeCollectionDeleteConfirmHandler() {
     setConfirmBoxOpen(false)
   }
 
+  // Delete Collection from Strapi
   function onDeleteCollection() {
     console.warning(`userCollection.id delete`, userCollection.id)
   }
 
-  const updateUserCollection = async (collectionId) => {
-    // get latest collection data
-    console.log('new collection update')
+  // const updateUserCollection = async (collectionId) => {
+  //   // get latest collection data
+  //   console.log('new collection update')
 
-    // get collection data
+  //   // get collection data
 
-    const res = await fetch(`${api_url}/collections/${collectionId}`)
-    const data = await res.json()
+  //   const res = await fetch(`${api_url}/collections/${collectionId}`)
+  //   const data = await res.json()
 
-    setUserCollection(data)
-    console.log(`UserCollection`, userCollection)
-  }
+  //   setUserCollection(data)
+  //   console.log(`UserCollection`, userCollection)
+  // }
 
   async function addUserPhotoHandler(photoData) {
     console.log(`photoData`, photoData)
 
-    // upload photo (percent)
+    // upload photo
     let uploadedFiles = []
     let uploadSuccess = false
     const data = new FormData()
@@ -71,14 +83,6 @@ function collection({ collection, api_url, session }) {
     data.append('files', photoData.photoFiles[0])
 
     try {
-      // const uploadRes = await axios({
-      //   method: 'POST',
-      //   url: `${api_url}/upload`,
-      //   data,
-      //   onUploadProgress: (progress) =>
-      //     setPercent(calcPercent(progress.loaded, progress.total)),
-      // })
-
       const uploadRes = await axios.post(`${api_url}/upload`, data, {
         onUploadProgress: (progress) =>
           setPercent(calcPercent(progress.loaded, progress.total)),
@@ -145,21 +149,22 @@ function collection({ collection, api_url, session }) {
     // console.log('data', data)
   }
 
+  // delete photo
   async function deletePhotoHandler(id) {
-    // delete photo
-    const response = await axios.delete(`${api_url}/photos/${id}`)
+    const response = await axios.delete(`/api/user/photo/delete/${id}`, {
+      params: {
+        id: id,
+      },
+    })
 
-    console.log(response)
-    console.log(`response`, response)
-    console.log(`${id} deleted`)
-    // update Photos if success
-
-    // find array id
-    const deletedPhoto = userPhotos.findIndex((photo) => photo.id === id)
-
-    console.log('deleted photo', deletedPhoto)
-
-    setUserPhotos(userPhotos.filter((photo) => photo.id !== id))
+    if (response.status == 200) {
+      console.log('Photo removed')
+      const deletedPhoto = userPhotos.findIndex((photo) => photo.id === id)
+      setUserPhotos(userPhotos.filter((photo) => photo.id !== id))
+      //      console.log('deleted photo', deletedPhoto)
+    } else {
+      console.log(`response`, response)
+    }
   }
 
   return (
@@ -176,7 +181,7 @@ function collection({ collection, api_url, session }) {
 
             <button
               className='mx-2 bg-gray-100 border text-gray-600 hover:bg-gray-200 hover:text-gray-800  px-2 py-2 rounded flex items-center'
-              onClick={collectionDeleteConfirmHandler}
+              onClick={openDeleteCollectionHandler}
             >
               <DeleteIcon className='h-4 w-4 mr-1' />
               Delete
@@ -187,12 +192,12 @@ function collection({ collection, api_url, session }) {
                   title='Collection will be deleted ?'
                   message={`Please confirm to delete collection ${userCollection.name}`}
                   onConfirm={onDeleteCollection}
-                  onCancel={closeCollectionDeleteBoxHandler}
+                  onCancel={closeCollectionDeleteConfirmHandler}
                 />
               </Container>
             )}
             {isConfirmBoxOpen && (
-              <Backdrop onCancel={closeCollectionDeleteBoxHandler} />
+              <Backdrop onCancel={closeCollectionDeleteConfirmHandler} />
             )}
           </div>
 
@@ -230,18 +235,9 @@ function collection({ collection, api_url, session }) {
           </div>
         </div>
       </Container>
-      {/* <Container>
-        <AddPhoto
-          api_url={api_url}
-          collection={collection}
-          upCollection={updateUserCollection}
-        />
-      </Container> */}
     </Layout>
   )
 }
-
-export default collection
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
@@ -280,3 +276,5 @@ export async function getServerSideProps(context) {
     },
   }
 }
+
+export default CollectionView

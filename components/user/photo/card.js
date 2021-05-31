@@ -16,6 +16,7 @@ const UserPhotoCard = ({ photo, onDelete }) => {
   } = photo
 
   function deleteHandler(event) {
+    closeConfirmBox()
     onDelete(id)
   }
 

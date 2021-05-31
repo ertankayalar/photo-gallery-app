@@ -6,8 +6,13 @@ import { useSession, getSession } from 'next-auth/client'
 import axios from 'axios'
 import Router from 'next/router'
 
+/**
+ * Collection Edit
+ *
+ */
+
 const EditCollection = ({ collection }) => {
-  async function editConnectionHandler(data) {
+  async function editCollectionHandler(data) {
     // sent data collection to api/collection/update
     // const result = await axios.post('/api/collection/edit', { })
 
@@ -29,7 +34,7 @@ const EditCollection = ({ collection }) => {
       <Container>
         <UserCollectionForm
           collection={collection}
-          onSubmit={editConnectionHandler}
+          onSubmit={editCollectionHandler}
         />
       </Container>
     </Layout>
