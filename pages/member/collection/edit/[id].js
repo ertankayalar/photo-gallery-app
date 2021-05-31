@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Layout from '../../../../components/layout/layout'
 import Container from '../../../../components/layout/container'
-import UserCollectionForm from '../../../../components/user/user-collection-form'
+import UserCollectionForm from '../../../../components/user/collection/form'
 import { useSession, getSession } from 'next-auth/client'
 import axios from 'axios'
 import Router from 'next/router'

@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useSession, getSession } from 'next-auth/client'
+import axios from 'axios'
+import Link from 'next/link'
 import Layout from '../../../components/layout/layout'
 import Container from '../../../components/layout/container'
-import AddPhoto from '../../../components/user/add-photo'
-import PageHeader from '../../../components/layout/page-header'
-import PhotosList from '../../../components/user/photos-list'
-import axios from 'axios'
-import { useSession, getSession } from 'next-auth/client'
-import UserPhotoCard from '../../../components/user/user-photo-card'
-import Link from 'next/link'
-import EditIcon from '../../../components/ui/edit-icon'
-import DeleteIcon from '../../../components/ui/delete-icon'
-import AddPhotoForm from '../../../components/user/add-photo-form'
 import Backdrop from '../../../components/ui/backdrop'
 import ConfirmBox from '../../../components/ui/confim'
+import EditIcon from '../../../components/ui/icon/edit'
+import DeleteIcon from '../../../components/ui/icon/delete'
+import UserPhotoCard from '../../../components/user/photo/card'
+import AddPhotoForm from '../../../components/user/photo/form'
 
 const calcPercent = (value, total) => Math.round((value / total) * 100)
 
@@ -149,7 +146,6 @@ function collection({ collection, api_url, session }) {
   }
 
   async function deletePhotoHandler(id) {
-    console.log(`id`, id)
     // delete photo
     const response = await axios.delete(`${api_url}/photos/${id}`)
 
