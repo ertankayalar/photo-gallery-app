@@ -59,19 +59,6 @@ function CollectionView({ collection, api_url, session }) {
     console.warning(`userCollection.id delete`, userCollection.id)
   }
 
-  // const updateUserCollection = async (collectionId) => {
-  //   // get latest collection data
-  //   console.log('new collection update')
-
-  //   // get collection data
-
-  //   const res = await fetch(`${api_url}/collections/${collectionId}`)
-  //   const data = await res.json()
-
-  //   setUserCollection(data)
-  //   console.log(`UserCollection`, userCollection)
-  // }
-
   async function addUserPhotoHandler(photoData) {
     console.log(`photoData`, photoData)
 
