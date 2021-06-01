@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useSession, getSession } from 'next-auth/client'
+import React, { useState } from 'react'
+import { getSession } from 'next-auth/client'
 import axios from 'axios'
 import Link from 'next/link'
 import Layout from '../../../components/layout/layout'
@@ -9,7 +9,7 @@ import ConfirmBox from '../../../components/ui/confim'
 import EditIcon from '../../../components/ui/icon/edit'
 import DeleteIcon from '../../../components/ui/icon/delete'
 import UserPhotoCard from '../../../components/user/photo/card'
-import AddPhotoForm from '../../../components/user/photo/form'
+import PhotoForm from '../../../components/user/photo/form'
 
 /**
  *  Collection View
@@ -25,9 +25,9 @@ const calcPercent = (value, total) => Math.round((value / total) * 100)
 // edit collection
 
 function CollectionView({ collection, api_url, session }) {
-  console.log('collection', collection)
   const [userCollection, setUserCollection] = useState(collection)
   const [userPhotos, setUserPhotos] = useState(collection.photos)
+  const [editPhoto, setEditPhoto] = useState(null)
   const [percent, setPercent] = useState(0)
   const { id, name, description } = collection
   const [isPhotoModalOpen, setPhotoModalOpen] = useState(false)
@@ -42,6 +42,13 @@ function CollectionView({ collection, api_url, session }) {
   // Close Add Photo Modal Box
   function closeModalHandler() {
     setPhotoModalOpen(false)
+    setEditPhoto(null)
+  }
+
+  // Open Edit Photo Modal Box
+  function editPhotoModalHandler(photo) {
+    setEditPhoto(photo)
+    photoModalHandler()
   }
 
   // Open Collection Delete Confirm Box
@@ -59,82 +66,274 @@ function CollectionView({ collection, api_url, session }) {
     console.warning(`userCollection.id delete`, userCollection.id)
   }
 
-  async function addUserPhotoHandler(photoData) {
-    console.log(`photoData`, photoData)
+  /**
+   * Add Photo
+   * @param {object} data
+   */
 
-    // upload photo
-    let uploadedFiles = []
-    let uploadSuccess = false
-    const data = new FormData()
+  async function addPhotoHandler(data) {
+    console.log('Photo data', data)
 
-    data.append('files', photoData.photoFiles[0])
-
-    try {
-      const uploadRes = await axios.post(`${api_url}/upload`, data, {
-        onUploadProgress: (progress) =>
-          setPercent(calcPercent(progress.loaded, progress.total)),
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
-      // buraya kadar completed dememesi gerekiyor
-      console.log('Upload Result =>', uploadRes)
-      if (uploadRes.status == 200) {
-        console.log('upload success')
-        uploadedFiles = uploadRes.data
-        uploadSuccess = true
-        setIsUploadSuccess(true)
-      }
-    } catch (err) {
-      console.log('Exception Error', err)
+    const newPhotoData = {
+      caption: data.caption,
+      description: data.description,
+      collection_id: collection._id,
     }
 
-    // add photo db
-    if (uploadSuccess) {
-      const newPhoto = {
-        caption: photoData.caption,
-        description: photoData.description,
-        photo: uploadedFiles[0].id, // id
-        collection_id: collection._id,
-      }
+    // build form data
+    const frmData = new FormData()
 
-      const add = await fetch(`${api_url}/photos`, {
-        method: 'POST',
+    if (data.photoFiles != null) {
+      frmData.append('files.photo', data.photoFiles[0])
+    }
+
+    frmData.append('data', JSON.stringify(newPhotoData))
+
+    console.log(`frmData`, frmData)
+
+    try {
+      const resAdd = await axios.post(`${api_url}/photos`, frmData, {
+        onUploadProgress: (progress) =>
+          setPercent(calcPercent(progress.loaded, progress.total)),
         headers: {
           Authorization: `Bearer ${session.jwt}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newPhoto),
       })
-      const addResponse = await add.json()
-      console.log(`addResponse`, addResponse)
-      setUserPhotos([...userPhotos, addResponse])
+
+      console.log('Add Photo Result =>', resAdd)
+      if (resAdd.status == 200) {
+        console.log('upload success')
+        setUserPhotos([...userPhotos, resAdd.data])
+        setIsUploadSuccess(true)
+        setPhotoModalOpen(false)
+      }
+    } catch (error) {
+      console.log('Exception Error', error)
     }
-
-    return {
-      uploadSuccess,
-    }
-    // bundan sonra state management
-
-    // add
-
-    // caption
-    // description
-    // collection_id
-    // form data yı oluştur
-
-    // const response = await fetch('/api/user/add-photo', {
-    //   method: 'POST',
-    //   body: JSON.stringify(photoData),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-
-    // const data = await response.json()
-    // console.log('data', data)
   }
+
+  /** ------------------------------------------ */
+
+  // old addPHotoHandler
+  // async function addPhotoHandlerOld(photoData) {
+  //   console.log(`photoData`, photoData)
+
+  //   // upload photo
+  //   let uploadedFiles = []
+  //   let uploadSuccess = false
+
+  //   const data = new FormData()
+  //   data.append('files', photoData.photoFiles[0])
+
+  //   try {
+  //     const uploadRes = await axios.post(`${api_url}/upload`, data, {
+  //       onUploadProgress: (progress) =>
+  //         setPercent(calcPercent(progress.loaded, progress.total)),
+  //       headers: {
+  //         Authorization: `Bearer ${session.jwt}`,
+  //       },
+  //     })
+  //     // buraya kadar completed dememesi gerekiyor
+  //     console.log('Upload Result =>', uploadRes)
+  //     if (uploadRes.status == 200) {
+  //       console.log('upload success')
+  //       uploadedFiles = uploadRes.data
+  //       uploadSuccess = true
+  //       setIsUploadSuccess(true)
+  //     }
+  //   } catch (err) {
+  //     console.log('Exception Error', err)
+  //   }
+
+  //   // add photo db
+  //   if (uploadSuccess) {
+  //     const newPhoto = {
+  //       caption: photoData.caption,
+  //       description: photoData.description,
+  //       photo: uploadedFiles[0].id, // id
+  //       collection_id: collection._id,
+  //     }
+
+  //     const add = await fetch(`${api_url}/photos`, {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${session.jwt}`,
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(newPhoto),
+  //     })
+  //     const addResponse = await add.json()
+  //     console.log(`addResponse`, addResponse)
+  //     setUserPhotos([...userPhotos, addResponse])
+  //   }
+
+  //   return {
+  //     uploadSuccess,
+  //   }
+  // }
+
+  /** ------------------------------------------ */
+
+  /**
+   * Update Photo Handler
+   * @param {object} data
+   */
+  async function updatePhotoHandler(data) {
+    console.log('Upload data', data)
+
+    const newPhotoData = {
+      id: data.id,
+      caption: data.caption,
+      description: data.description,
+      collection_id: collection._id,
+    }
+
+    // build form data
+    const frmData = new FormData()
+    if (data.photoFiles != null) {
+      frmData.append('files.photo', data.photoFiles[0])
+    }
+    frmData.append('data', JSON.stringify(newPhotoData))
+
+    try {
+      const resUpd = await axios.put(
+        `${api_url}/photos/${newPhotoData.id}`,
+        frmData,
+        {
+          onUploadProgress: (progress) =>
+            setPercent(calcPercent(progress.loaded, progress.total)),
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      console.log('Update Photo Result => ', resUpd)
+      if (resUpd.status == 200) {
+        console.log('update success')
+
+        setUserPhotos(
+          userPhotos.map((uphoto) => {
+            if (uphoto.id === newPhotoData.id) {
+              return resUpd.data
+            } else {
+              return uphoto
+            }
+          })
+        )
+        // setUserPhotos([...userPhotos, resAdd.data])
+        setIsUploadSuccess(true)
+        setPhotoModalOpen(false)
+      }
+    } catch (error) {
+      console.log('Exception Error', error)
+    }
+  }
+
+  // /**
+  //  * updatePhotoHandler
+  //  * @param {object} photoData
+  //  */
+  // async function updatePhotoHandler(photoData) {
+  //   // /api/user/photo/update, data
+  //   console.log('update photo handler')
+  //   console.log('photoData', photoData)
+
+  //   // task: delete old photo
+
+  //   // upload photo
+  //   if (photoData.photoFiles != null) {
+  //     let uploadedFiles = []
+  //     let uploadSuccess = false
+  //     const data = new FormData()
+
+  //     data.append('files', photoData.photoFiles[0])
+
+  //     try {
+  //       const uploadRes = await axios.post(`${api_url}/upload`, data, {
+  //         onUploadProgress: (progress) =>
+  //           setPercent(calcPercent(progress.loaded, progress.total)),
+  //         headers: {
+  //           Authorization: `Bearer ${session.jwt}`,
+  //         },
+  //       })
+  //       // buraya kadar completed dememesi gerekiyor
+  //       console.log('Upload Result =>', uploadRes)
+  //       if (uploadRes.status == 200) {
+  //         console.log('upload success')
+  //         uploadedFiles = uploadRes.data
+  //         setIsUploadSuccess(true)
+  //       }
+  //     } catch (err) {
+  //       console.log('Exception Error', err)
+  //     }
+  //   }
+
+  //   // update photo db
+  //   let editPhoto = {}
+  //   if (isUploadSuccess) {
+  //     editPhoto = {
+  //       id: photoData.id,
+  //       caption: photoData.caption,
+  //       description: photoData.description,
+  //       photo: uploadedFiles[0].id,
+  //       collection_id: collection._id,
+  //     }
+  //   } else {
+  //     editPhoto = {
+  //       id: photoData.id,
+  //       caption: photoData.caption,
+  //       description: photoData.description,
+  //       collection_id: collection._id,
+  //     }
+  //   }
+
+  //   // update db
+  //   //
+  //   // const result = await axios.post('/api/photos/update', editPhoto, {
+  //   //   headers: {
+  //   //     'Content-Type': 'application/json',
+  //   //   },
+  //   // })
+
+  //   const add = await fetch(`${api_url}/photos/${editPhoto.id}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       Authorization: `Bearer ${session.jwt}`,
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(editPhoto),
+  //   })
+  //   const editResponse = await add.json()
+  //   console.log(`editResponse`, editResponse)
+
+  //   // if (uploadSuccess) {
+  //   //   // find current  photo remove, add new editphoto
+  //   //   // const deletedPhoto = userPhotos.findIndex(
+  //   //   //   (photo) => photo.id === photoData.id
+  //   //   // )
+
+  //   //   // setUserPhotos(userPhotos.filter((photo) => photo.id !== photoData.id))
+  //   //   // console.log(`userPhotos (deleted)`, userPhotos)
+  //   //   // setUserPhotos([...userPhotos, editResponse])
+  //   //   // console.log(`userPhotos (edited)`, userPhotos)
+
+  //   //   // delete
+  //   //   const deletedPhoto = userPhotos.findIndex(
+  //   //     (photo) => photo.id === photoData.id
+  //   //   )
+  //   //   console.log('deletedPhoto', deletedPhoto)
+  //   //   setUserPhotos(userPhotos.filter((photo) => photo.id !== photoData.id))
+  //   //   console.log(`deleted userPhotos (...)`, userPhotos)
+  //   //   setUserPhotos([...userPhotos, editResponse])
+  //   //   console.log(`edited userPhotos (...)`, userPhotos)
+  //   // }
+  // }
 
   // delete photo
   async function deletePhotoHandler(id) {
@@ -147,8 +346,8 @@ function CollectionView({ collection, api_url, session }) {
     if (response.status == 200) {
       console.log('Photo removed')
       const deletedPhoto = userPhotos.findIndex((photo) => photo.id === id)
-      setUserPhotos(userPhotos.filter((photo) => photo.id !== id))
       //      console.log('deleted photo', deletedPhoto)
+      setUserPhotos(userPhotos.filter((photo) => photo.id !== id))
     } else {
       console.log(`response`, response)
     }
@@ -202,11 +401,13 @@ function CollectionView({ collection, api_url, session }) {
       </Container>
       {isPhotoModalOpen && (
         <Container>
-          <AddPhotoForm
-            onAddPhoto={addUserPhotoHandler}
-            percent={percent}
+          <PhotoForm
+            photo={editPhoto}
+            onAddPhoto={addPhotoHandler}
+            onUpdatePhoto={updatePhotoHandler}
             onCancel={closeModalHandler}
             isUploadSuccess={isUploadSuccess}
+            percent={percent}
           />
         </Container>
       )}
@@ -217,7 +418,11 @@ function CollectionView({ collection, api_url, session }) {
           <h2 className='text-2xl text-gray-600 text-center my-5'>Photos</h2>
           <div className='w-full grid grid-cols-3 gap-2'>
             {userPhotos.map((photo) => (
-              <UserPhotoCard photo={photo} onDelete={deletePhotoHandler} />
+              <UserPhotoCard
+                photo={photo}
+                onEditPhoto={editPhotoModalHandler}
+                onDelete={deletePhotoHandler}
+              />
             ))}
           </div>
         </div>

@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import TopMenu from './top-menu'
 import { MAIN_MENU, USER_MENU } from '../../lib/constants'
-import MenuIcon from '../ui/menu-icon'
+import MenuIcon from '../ui/icon/menu'
 import UserMenu from './user-menu'
 
 class PageHeader extends React.Component {

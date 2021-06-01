@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import Layout from '../../../../components/layout/layout'
 import Container from '../../../../components/layout/container'
 import UserCollectionForm from '../../../../components/user/collection/form'
