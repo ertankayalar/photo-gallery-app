@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import ProgressBar from '../../ui/progress-bar'
 import UploadIcon from '../../ui/icon/upload'
 import Image from 'next/image'
+import Loader from '../../ui/loader'
 
 // collect photo data
 const PhotoForm = ({
@@ -18,6 +19,9 @@ const PhotoForm = ({
   const [error, setError] = useState('')
   const [files, setFiles] = useState(null)
   const [message, setMessage] = useState('')
+  const [isUpload, setIsUpload] = useState(false)
+  console.log(`isUpload`, isUpload)
+
   // edit photo
   const [id, setId] = photo != null ? useState(photo.id) : useState(null)
   const [caption, setCaption] =
@@ -29,35 +33,42 @@ const PhotoForm = ({
 
   const formTitle = id == null ? 'Add Photo' : 'Edit Photo'
 
-  function submitHandler(event) {
+  async function submitHandler(event) {
     event.preventDefault()
+    console.log(`isUpload`, isUpload)
     // const enteredCaption = captionRef.current.value
     // const enteredDescription = descriptionRef.current.value
     // const enteredPhoto = photoRef.current.value
 
     // console.log('enteredCaption', enteredCaption)
     // console.log('enteredPhoto', enteredPhoto)
-    console.log('files', files)
 
+    console.log('files', files)
     // if id is null
     if (id == null) {
-      const result = onAddPhoto({
+      setIsUpload(true)
+      console.log(`onAddPhoto: isUpload`, isUpload)
+      const result = await onAddPhoto({
         caption: caption,
         description: description,
         photoFiles: files,
       })
+      setIsUpload(false)
     }
 
     // if id is not null
     if (id != null) {
-      const result = onUpdatePhoto({
+      setIsUpload(true)
+      console.log(`onUpdatePhoto: isUpload`, isUpload)
+      const result = await onUpdatePhoto({
         id: id,
         caption: caption,
         description: description,
         photoFiles: files,
       })
+      setIsUpload(false)
     }
-
+    console.log(`isUpload`, isUpload)
     if (isUploadSuccess) {
       setMessage('Upload completed')
     }
@@ -81,9 +92,9 @@ const PhotoForm = ({
         </h2>
       </div>
 
-      <div>
-        <form onSubmit={submitHandler}>
-          <div className='w-full p-5 my-3'>
+      <form onSubmit={submitHandler}>
+        <div className='w-full flex flex-wrap p-2 my-3'>
+          <div className='w-full md:w-1/2 p-1'>
             <label className='block'>
               <span className='text-gray-700'>Caption</span>
               <input
@@ -97,6 +108,7 @@ const PhotoForm = ({
                 }}
                 ref={captionRef}
                 className='mt-1 block  rounded-sm py-2 px-3 border-gray-300 border shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full'
+                disabled={isUpload}
               />
             </label>
             <label className='block mt-5'>
@@ -109,8 +121,23 @@ const PhotoForm = ({
                   setDescription(event.target.value)
                 }}
                 className='mt-1 block w-full rounded-sm py-2 px-3 border-gray-300 border shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+                disabled={isUpload}
               ></textarea>
             </label>
+
+            {isUpload && (
+              <div className='w-full flex items-center justify-center py-3'>
+                <Loader />
+                <span className='text-gray-600'>Uploading...</span>
+              </div>
+            )}
+          </div>
+          <div className='w-full md:w-1/2 p-1'>
+            <div
+              className='h-48 bg-gray-50 bg-cover'
+              style={{ backgroundImage: `url(${smallPhoto})` }}
+            ></div>
+
             <label className='block mt-5'>
               <span className='text-gray-700'>Select Your Photo</span>
               <input
@@ -123,34 +150,34 @@ const PhotoForm = ({
                   console.log('event.target.files', event.target.files)
                   console.log(files)
                 }}
+                disabled={isUpload}
               />
             </label>
-            <ProgressBar percent={percent} />
+          </div>
+          <div className='w-full'>
+            {/* <ProgressBar percent={percent} /> */}
             <p>{message}</p>
-            <div className='w-full flex items-center justify-content-center'>
-              <img
-                src={smallPhoto}
-                width={500}
-                height={200}
-                className='mx-auto'
-              />
-            </div>
+
             <div className='w-full flex items-center justify-center'>
-              <button className='bg-blue-700 hover:bg-blue-600 text-white py-2 px-3 my-5 rounded  flex items-center text-md '>
+              <button
+                className='bg-blue-700 hover:bg-blue-600 text-white py-2 px-3 my-5 rounded  flex items-center text-md disabled:opacity-50'
+                disabled={isUpload}
+              >
                 <UploadIcon className='h-4 w-4 mr-2' />
                 Upload
               </button>
 
               <button
-                className=' bg-gray-700 hover:bg-gray-600 text-white py-2 px-3 my-5 mx-2 rounded'
+                className=' bg-gray-700 hover:bg-gray-600 text-white py-2 px-3 my-5 mx-2 rounded disabled:opacity-50'
                 onClick={closeHandler}
+                disabled={isUpload}
               >
                 Close{' '}
               </button>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   )
 }

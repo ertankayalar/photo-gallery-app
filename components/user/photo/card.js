@@ -35,7 +35,12 @@ const UserPhotoCard = ({ photo, onDelete, onEditPhoto }) => {
 
   return (
     <div className='text-center'>
-      <img src={mediumUrl} alt={caption} className='shadow-xl' />
+      <div
+        className='h-48 bg-gray-50 bg-cover '
+        style={{ backgroundImage: `url(${mediumUrl})` }}
+      >
+        {/* <img src={mediumUrl} alt={caption} className='shadow-xl' /> */}
+      </div>
       <p className='my-4 text-md text-gray-600'>{caption}</p>
 
       <div className='w-full flex items-center justify-center'>
