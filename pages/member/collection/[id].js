@@ -10,6 +10,7 @@ import EditIcon from '../../../components/ui/icon/edit'
 import DeleteIcon from '../../../components/ui/icon/delete'
 import UserPhotoCard from '../../../components/user/photo/card'
 import PhotoForm from '../../../components/user/photo/form'
+import Router from 'next/router'
 
 /**
  *  Collection View
@@ -61,25 +62,43 @@ function CollectionView({ collection, api_url, session }) {
     setConfirmBoxOpen(false)
   }
 
+  async function deletePhotos(id) {
+    const res = await axios.delete(`/api/user/photo/delete/${id}`)
+  }
   // Delete Collection from Strapi
   async function onDeleteCollection() {
     console.log(`userCollection.id delete`, userCollection.id)
-
+    setConfirmBoxOpen(false)
     // api/user/collection
 
     // delete all userPhotos
-    userPhotos.map((uPhoto) => {
-      const response = await axios.delete(
-        `/api/user/photo/delete/${uPhoto.id}`,
-        {
-          params: {
-            id: id,
-          },
-        }
-      )
-    })
+    // let res
+    // userPhotos.forEach((up) => {
+    //   res = await axios.delete(`/api/user/photo/delete/${up.id}`, {
+    //     params: {
+    //       id: up.id,
+    //     },
+    //   })
+    // })
 
     // delete userCollection
+
+    const res = await userPhotos.map((item) => deletePhotos(item.id))
+
+    const response = await axios.delete(
+      `/api/collection/delete/${userCollection.id}`
+      // {
+      //   params: {
+      //     id: userCollection.id,
+      //   },
+      // }
+    )
+    if (response.status == 200) {
+      console.log('Collection removed')
+      Router.push(`/member/collections/`)
+    } else {
+      console.log(`response`, response)
+    }
   }
 
   /**

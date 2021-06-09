@@ -27,7 +27,7 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
     // if ok then
     //    console.info('form submit handler here')
 
-    if (error != '') {
+    if (error == '') {
       const result = await onSubmit({
         id: id,
         name: name,

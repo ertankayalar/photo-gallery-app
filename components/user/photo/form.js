@@ -114,7 +114,7 @@ const PhotoForm = ({
                   console.log(files)
                 }}
                 disabled={isUpload}
-                required
+                required={id == null}
               />
             </label>
           </div>
