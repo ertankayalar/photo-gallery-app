@@ -11,6 +11,7 @@ import DeleteIcon from '../../../components/ui/icon/delete'
 import UserPhotoCard from '../../../components/user/photo/card'
 import PhotoForm from '../../../components/user/photo/form'
 import Router from 'next/router'
+import Breadcrumb from '../../../components/ui/breadcrumb'
 
 /**
  *  Collection View
@@ -34,6 +35,19 @@ function CollectionView({ collection, api_url, session }) {
   const [isPhotoModalOpen, setPhotoModalOpen] = useState(false)
   const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false)
   const [isUploadSuccess, setIsUploadSuccess] = useState(false)
+
+  const breadcrumbs = [
+    { url: '/', name: 'Home' },
+    {
+      url: `/member/collections/`,
+      name: `My Collections`,
+    },
+    {
+      url: `/member/collection/${userCollection.id}`,
+      name: userCollection.name,
+      last: true,
+    },
+  ]
 
   // Open Photo Modal Handler
   function photoModalHandler() {
@@ -390,6 +404,9 @@ function CollectionView({ collection, api_url, session }) {
 
   return (
     <Layout>
+      <Container className='pl-2'>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+      </Container>
       <Container>
         <div className='w-full text-center bg-gray-50 my-10 pb-10 rounded border'>
           <div className='w-full py-2 px-2  flex justify-end text-sm'>

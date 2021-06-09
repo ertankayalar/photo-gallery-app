@@ -6,11 +6,24 @@ import Layout from '../../components/layout/layout'
 import Container from '../../components/layout/container'
 import PageHeader from '../../components/layout/page-header'
 import CollectionList from '../../components/user/collection/list'
+import Breadcrumb from '../../components/ui/breadcrumb'
 
 function MyCollections({ collections }) {
+  const breadcrumbs = [
+    { url: '/', name: 'Home' },
+    {
+      url: `/member/collections/`,
+      name: `My Collections`,
+      last: true,
+    },
+  ]
   return (
     <Layout>
+      <Container className='pl-2'>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+      </Container>
       <PageHeader title='My Collections' />
+
       <Container className='w-full flex items-center justify-center  '>
         <Link href='/member/collection/add'>
           <a className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'>

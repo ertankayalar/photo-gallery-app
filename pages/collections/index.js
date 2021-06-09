@@ -4,10 +4,22 @@ import Layout from '../../components/layout/layout'
 import { COLLECTIONS_DATA } from '../../lib/constants'
 import CollectionList from '../../components/photos/collection-list'
 import PageHeader from '../../components/layout/page-header'
+import Breadcrumb from '../../components/ui/breadcrumb'
 
 function CollectionsHome({ collections }) {
+  const breadcrumbs = [
+    { url: '/', name: 'Home' },
+    {
+      url: `/collections/`,
+      name: `Collections`,
+      last: true,
+    },
+  ]
   return (
     <Layout>
+      <Container className='pl-2'>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+      </Container>
       <PageHeader title='Collections' />
 
       <Container>

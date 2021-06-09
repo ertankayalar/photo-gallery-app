@@ -5,6 +5,7 @@ import UserCollectionForm from '../../../../components/user/collection/form'
 import { useSession, getSession } from 'next-auth/client'
 import axios from 'axios'
 import Router from 'next/router'
+import Breadcrumb from '../../../../components/ui/breadcrumb'
 
 /**
  * Collection Edit
@@ -12,6 +13,19 @@ import Router from 'next/router'
  */
 
 const EditCollection = ({ collection }) => {
+  const breadcrumbs = [
+    { url: '/', name: 'Home' },
+    {
+      url: `/member/collections/`,
+      name: `My Collections`,
+    },
+    {
+      url: `/member/collection/${collection.id}`,
+      name: collection.name,
+      last: true,
+    },
+  ]
+
   async function editCollectionHandler(data) {
     // sent data collection to api/collection/update
     // const result = await axios.post('/api/collection/edit', { })
@@ -31,6 +45,9 @@ const EditCollection = ({ collection }) => {
 
   return (
     <Layout>
+      <Container className='pl-2'>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+      </Container>
       <Container>
         <UserCollectionForm
           collection={collection}

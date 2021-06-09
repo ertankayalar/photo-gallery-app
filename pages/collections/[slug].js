@@ -2,11 +2,23 @@ import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
 import PageHeader from '../../components/layout/page-header'
 import PhotoCard from '../../components/photos/card'
+import Breadcrumb from '../../components/ui/breadcrumb'
 
 function CollectionPage({ collection }) {
   const { name, description, photos } = collection
+  const breadcrumbs = [
+    { url: '/', name: 'Home' },
+    {
+      url: `/collections/`,
+      name: `Collections`,
+    },
+    { url: `/collections/${collection.slug}`, name: name, last: true },
+  ]
   return (
     <Layout>
+      <Container className='pl-2'>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+      </Container>
       <PageHeader title={name} description={description} />
 
       <Container>
