@@ -18,23 +18,30 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
     event.preventDefault()
 
     // check required fields
+    if (!name || name.length < 10) {
+      setError(
+        'invalid input - collection name should be least 10 characters long'
+      )
+    }
 
     // if ok then
     //    console.info('form submit handler here')
 
-    const result = await onSubmit({
-      id: id,
-      name: name,
-      description: description,
-    })
+    if (error != '') {
+      const result = await onSubmit({
+        id: id,
+        name: name,
+        description: description,
+      })
 
-    // console.log('result form', result)
-    // setStatusMsg(result.data.status_message)
+      // console.log('result form', result)
+      // setStatusMsg(result.data.status_message)
 
-    // redirect to view
+      // redirect to view
 
-    if (result.status == 200) {
-      Router.push(`/member/collection/${result.data.id}`)
+      if (result.status == 200) {
+        Router.push(`/member/collection/${result.data.id}`)
+      }
     }
   }
 
@@ -52,6 +59,7 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
             <label className='block'>
               <span className='text-gray-700'>Name</span>
               <input
+                required
                 type='text'
                 value={name}
                 onChange={(event) => {

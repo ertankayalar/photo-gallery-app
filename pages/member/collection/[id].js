@@ -62,8 +62,24 @@ function CollectionView({ collection, api_url, session }) {
   }
 
   // Delete Collection from Strapi
-  function onDeleteCollection() {
-    console.warning(`userCollection.id delete`, userCollection.id)
+  async function onDeleteCollection() {
+    console.log(`userCollection.id delete`, userCollection.id)
+
+    // api/user/collection
+
+    // delete all userPhotos
+    userPhotos.map((uPhoto) => {
+      const response = await axios.delete(
+        `/api/user/photo/delete/${uPhoto.id}`,
+        {
+          params: {
+            id: id,
+          },
+        }
+      )
+    })
+
+    // delete userCollection
   }
 
   /**

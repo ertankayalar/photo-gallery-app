@@ -35,7 +35,6 @@ const PhotoForm = ({
 
   async function submitHandler(event) {
     event.preventDefault()
-    console.log(`isUpload`, isUpload)
     // const enteredCaption = captionRef.current.value
     // const enteredDescription = descriptionRef.current.value
     // const enteredPhoto = photoRef.current.value
@@ -43,34 +42,39 @@ const PhotoForm = ({
     // console.log('enteredCaption', enteredCaption)
     // console.log('enteredPhoto', enteredPhoto)
 
-    console.log('files', files)
-    // if id is null
-    if (id == null) {
-      setIsUpload(true)
-      console.log(`onAddPhoto: isUpload`, isUpload)
-      const result = await onAddPhoto({
-        caption: caption,
-        description: description,
-        photoFiles: files,
-      })
-      setIsUpload(false)
+    // error check
+
+    if (!caption || caption.length < 5) {
+      setError('invalid input - caption should also be least 7 characters long')
     }
 
-    // if id is not null
-    if (id != null) {
-      setIsUpload(true)
-      console.log(`onUpdatePhoto: isUpload`, isUpload)
-      const result = await onUpdatePhoto({
-        id: id,
-        caption: caption,
-        description: description,
-        photoFiles: files,
-      })
-      setIsUpload(false)
-    }
-    console.log(`isUpload`, isUpload)
-    if (isUploadSuccess) {
-      setMessage('Upload completed')
+    if (!error != '') {
+      // if id is null
+      if (id == null) {
+        setIsUpload(true)
+        const result = await onAddPhoto({
+          caption: caption,
+          description: description,
+          photoFiles: files,
+        })
+        setIsUpload(false)
+      }
+
+      // if id is not null
+      if (id != null) {
+        setIsUpload(true)
+        const result = await onUpdatePhoto({
+          id: id,
+          caption: caption,
+          description: description,
+          photoFiles: files,
+        })
+        setIsUpload(false)
+      }
+      console.log(`isUpload`, isUpload)
+      if (isUploadSuccess) {
+        setMessage('Upload completed')
+      }
     }
   }
 
@@ -86,14 +90,35 @@ const PhotoForm = ({
   return (
     <div className='modal  border rounded px-3 py-3'>
       <div className='text-center'>
-        <h2 className='text-lg text-gray-700'>
-          {/* {id != null && `Edit Photo`} {id == null && `Add Photo`} */}
-          {formTitle}
-        </h2>
+        <h2 className='text-xl text-gray-700'>{formTitle}</h2>
       </div>
 
       <form onSubmit={submitHandler}>
         <div className='w-full flex flex-wrap p-2 my-3'>
+          <div className='w-full md:w-1/2 p-1'>
+            <div
+              className='h-48 bg-gray-50 bg-cover rounded'
+              style={{ backgroundImage: `url(${smallPhoto})` }}
+            ></div>
+
+            <label className='block mt-5'>
+              <span className='text-gray-700'>Select Your Photo</span>
+              <input
+                type='file'
+                className='mt-1 block'
+                ref={photoRef}
+                onChange={(event) => {
+                  setError('')
+                  setFiles(event.target.files)
+                  console.log('event.target.files', event.target.files)
+                  console.log(files)
+                }}
+                disabled={isUpload}
+                required
+              />
+            </label>
+          </div>
+
           <div className='w-full md:w-1/2 p-1'>
             <label className='block'>
               <span className='text-gray-700'>Caption</span>
@@ -124,39 +149,18 @@ const PhotoForm = ({
                 disabled={isUpload}
               ></textarea>
             </label>
-
+            {error && <p className='text-red-800'>{error}</p>}
             {isUpload && (
               <div className='w-full flex items-center justify-center py-3'>
                 <Loader />
                 <span className='text-gray-600'>Uploading...</span>
               </div>
             )}
+            <p>{message}</p>
           </div>
-          <div className='w-full md:w-1/2 p-1'>
-            <div
-              className='h-48 bg-gray-50 bg-cover'
-              style={{ backgroundImage: `url(${smallPhoto})` }}
-            ></div>
 
-            <label className='block mt-5'>
-              <span className='text-gray-700'>Select Your Photo</span>
-              <input
-                type='file'
-                className='mt-1 block'
-                ref={photoRef}
-                onChange={(event) => {
-                  setError('')
-                  setFiles(event.target.files)
-                  console.log('event.target.files', event.target.files)
-                  console.log(files)
-                }}
-                disabled={isUpload}
-              />
-            </label>
-          </div>
           <div className='w-full'>
             {/* <ProgressBar percent={percent} /> */}
-            <p>{message}</p>
 
             <div className='w-full flex items-center justify-center'>
               <button
