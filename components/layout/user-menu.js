@@ -10,18 +10,18 @@ function UserMenu() {
 
   return (
     <div>
-      {!session && !loading && (
+      {/* {!session && !loading && (
         <Link href='/register'>
           <a className='w-full text-left  py-2 md:py-1 px-1 font-header md:w-auto hover:underline'>
             Register
           </a>
         </Link>
-      )}
+      )} */}
 
       {!session && !loading && (
-        <Link href='/login'>
+        <Link href='/auth'>
           <a className='w-full text-left  py-2 md:py-1 px-1 font-header md:w-auto hover:underline'>
-            Login
+            Sign up
           </a>
         </Link>
       )}

@@ -43,7 +43,7 @@ class PageHeader extends React.Component {
           </div>
 
           <div className='col-span-2  h-auto md:h-24 pr-2 flex flex-wrap  items-center justify-end text-primary-700 text-sm'>
-            <UserMenu menuItems={USER_MENU} />
+            <UserMenu />
           </div>
         </section>
         <section className='border-bottom' id='menu' ref={this.menu}>
