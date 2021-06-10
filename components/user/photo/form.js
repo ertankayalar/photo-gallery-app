@@ -74,17 +74,21 @@ const PhotoForm = ({
       console.log(`isUpload`, isUpload)
       if (isUploadSuccess) {
         setMessage('Upload completed')
+        clearFields()
       }
     }
   }
 
   function closeHandler(event) {
+    clearFields()
+    onCancel()
+  }
+
+  function clearFields() {
     setId(null)
     setCaption('')
     setDescription('')
     setFiles(null)
-
-    onCancel()
   }
 
   return (

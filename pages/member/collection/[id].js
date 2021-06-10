@@ -154,9 +154,11 @@ function CollectionView({ collection, api_url, session }) {
       console.log('Add Photo Result =>', resAdd)
       if (resAdd.status == 200) {
         console.log('upload success')
-        setUserPhotos([...userPhotos, resAdd.data])
         setIsUploadSuccess(true)
+        setUserPhotos([...userPhotos, resAdd.data])
+
         setPhotoModalOpen(false)
+        setEditPhoto(null)
       }
     } catch (error) {
       console.log('Exception Error', error)
@@ -264,6 +266,7 @@ function CollectionView({ collection, api_url, session }) {
       console.log('Update Photo Result => ', resUpd)
       if (resUpd.status == 200) {
         console.log('update success')
+        setIsUploadSuccess(true)
 
         setUserPhotos(
           userPhotos.map((uphoto) => {
@@ -275,8 +278,8 @@ function CollectionView({ collection, api_url, session }) {
           })
         )
         // setUserPhotos([...userPhotos, resAdd.data])
-        setIsUploadSuccess(true)
         setPhotoModalOpen(false)
+        setEditPhoto(null)
       }
     } catch (error) {
       console.log('Exception Error', error)
