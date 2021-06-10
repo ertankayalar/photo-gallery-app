@@ -7,7 +7,6 @@ const options = {
   },
   callbacks: {
     jwt: async (token, user) => {
-      console.log('user', user)
       if (user) {
         token.jwt = user.jwt
         token.user = user.user
@@ -15,7 +14,6 @@ const options = {
       return Promise.resolve(token)
     },
     session: async (session, token) => {
-      console.log('token', token)
       session.jwt = token.jwt
       session.user = token.user
       return Promise.resolve(session)
@@ -40,7 +38,6 @@ const options = {
             return null
           }
         } catch (error) {
-          console.log(`HATA VAR`)
           const errorMessage =
             error.response.data.message[0].messages[0].message
           throw new Error(errorMessage)
@@ -52,8 +49,8 @@ const options = {
   secret: process.env.SECRET,
 
   pages: {
-    signIn: '/login',
-    error: '/login',
+    signIn: '/auth',
+    error: '/auth',
   },
 }
 export default (req, res) => NextAuth(req, res, options)
