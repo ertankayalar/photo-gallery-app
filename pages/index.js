@@ -1,20 +1,29 @@
 import Layout from '../components/layout/layout'
 import Container from '../components/layout/container'
 import Hero from '../components/ui/hero'
+import axios from 'axios'
+import FeaturedCollections from '../components/photos/featured-collections'
 
-export default function Home() {
+export default function Home({ featuredCollections }) {
   return (
     <Layout>
       <Hero />
-      <div>
-        <Container>
-          <div className='w-full py-10 text-center'>
-            <h2 className='text-xl md:text-3xl text-gray-600'>
-              Latest Collections
-            </h2>
-          </div>
-        </Container>
-      </div>
+      <Container>
+        <FeaturedCollections collections={featuredCollections} />
+      </Container>
     </Layout>
   )
+}
+
+export const getStaticProps = async () => {
+  const result = await axios.get(`${process.env.API_URL}/collections`, {
+    params: {
+      featured: true,
+    },
+  })
+
+  return {
+    props: { featuredCollections: result.data },
+    revalidate: 10,
+  }
 }
