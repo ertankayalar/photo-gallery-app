@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/auth',
         permanent: false,
       },
     }

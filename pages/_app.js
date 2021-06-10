@@ -25,7 +25,7 @@ function Auth({ children }) {
 
   useEffect(() => {
     if (loading) return // Do nothing while loading
-    if (!isUser) router.push('/login')
+    if (!isUser) router.push('/auth')
     // If not authenticated, force log in
   }, [isUser, loading])
 
