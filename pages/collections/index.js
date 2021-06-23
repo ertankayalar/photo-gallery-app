@@ -1,7 +1,6 @@
 import React from 'react'
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
-import { COLLECTIONS_DATA } from '../../lib/constants'
 import CollectionList from '../../components/photos/collection-list'
 import PageHeader from '../../components/layout/page-header'
 import Breadcrumb from '../../components/ui/breadcrumb'
