@@ -15,6 +15,7 @@
     "mongodb": "^3.6.9",
     "next": "10.0.9",
     "next-auth": "^3.23.3",
+    "next-seo": "^4.26.0",
     "nookies": "^2.5.2",
     "postcss": "^8.2.8",
     "react": "17.0.1",
