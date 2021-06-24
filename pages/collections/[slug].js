@@ -1,7 +1,7 @@
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
 import PageHeader from '../../components/layout/page-header'
-import PhotoCard from '../../components/photos/card'
+import PhotoDetailCard from '../../components/photos/photo-detail-card'
 import Breadcrumb from '../../components/ui/breadcrumb'
 
 function CollectionPage({ collection }) {
@@ -24,7 +24,7 @@ function CollectionPage({ collection }) {
       <Container>
         <div className='w-full grid grid-cols-3 gap-3'>
           {photos.map((photo) => (
-            <PhotoCard photo={photo} />
+            <PhotoDetailCard photo={photo} />
           ))}
         </div>
       </Container>

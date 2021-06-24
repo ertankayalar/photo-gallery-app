@@ -1,5 +1,12 @@
-function Backdrop({ onCancel }) {
-  return <div className='backdrop' onClick={onCancel} />
+function Backdrop({ onCancel, children }) {
+  return (
+    <div
+      className='backdrop  flex items-center justify-center'
+      onClick={onCancel}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default Backdrop

@@ -1,17 +1,42 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
-function PhotoModal({ large, caption, onCancel }) {
+function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
+  const [activeIndex, setActiveIndex] = useState(count)
+  const [activePhoto, setActivePhoto] = useState(photos[activeIndex])
+
+  useEffect(() => {
+    setActivePhoto(photos[activeIndex])
+  }, [activeIndex])
+
+  console.log(`photos`, photos)
+  console.log(`activePhoto`, activePhoto)
+  console.log(`active index`, activeIndex)
+  console.log(`photos.length`, photos.length)
+
   function closeHandler() {
     onCancel()
   }
+
+  function nextHandler(event) {
+    event.preventDefault()
+    if (activeIndex < photos.length) {
+      setActiveIndex(activeIndex + 1)
+    }
+    event.stopPropagation()
+  }
+
+  function prevHandler(event) {
+    event.preventDefault()
+    if (activeIndex > 0) {
+      setActiveIndex(activeIndex - 1)
+    }
+    event.stopPropagation()
+  }
+
   return (
-    <div className='modal'>
-      <div className='w-full flex  h-12 px-2 py-2'>
-        <span className='text-2xl font-semibold text-gray-700'>{caption}</span>
-        <button
-          className=' text-gray-400 hover:text-gray-700  h-10 w-10 absolute right-1'
-          onClick={closeHandler}
-        >
+    <div className='w-full h-screen absolute'>
+      <div className='w-full pt-3'>
+        <button className=' text-white hover:text-gray-400 mr-5  h-10 w-10 absolute right-1'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -27,8 +52,66 @@ function PhotoModal({ large, caption, onCancel }) {
           </svg>
         </button>
       </div>
-      <div className='w-full text-center p-2'>
-        <img src={large.url} />
+
+      <div className='flex fixed left-0 w-1/6 h-5/6 justify-end '>
+        <button
+          className='text-white fixed top-60 mr-5 focus:outline-none disabled:opacity-40'
+          onClick={prevHandler}
+          disabled={activeIndex == 0}
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-8 w-8'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M15 19l-7-7 7-7'
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div className='flex fixed right-0 w-1/6 h-5/6 justify-start'>
+        <button
+          className='text-white fixed top-60 ml-5 focus:outline-none disabled:opacity-40'
+          onClick={nextHandler}
+          disabled={activeIndex == photos.length - 1}
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-8 w-8'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M9 5l7 7-7 7'
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div className='modal  bg-white rounded h-5/6 w-4/6 mx-auto text-gray-600'>
+        <div className='w-full flex h-12 py-3 px-5'>
+          {user.Firstname} {user.Lastname}
+        </div>
+        <div className='w-full flex items-center justify-center p-2'>
+          <img src={activePhoto.files[0].formats.large.url} />
+        </div>
+        <div className='w-full text-center py-5'>
+          <p className='text-2xl font-normal  text-gray-700'>
+            {activePhoto.caption}
+          </p>
+          <p className='text-gray-500 text-sm'>{activePhoto.descripton}</p>
+        </div>
       </div>
     </div>
   )

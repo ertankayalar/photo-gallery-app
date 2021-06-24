@@ -3,14 +3,14 @@
 
 .modal {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  background-color: white;
+  /*border-radius: 6px;*/
+  /*background-color: white;*/
 
-  width: 60rem;
+  /*  width: 60rem;*/
   z-index: 10;
-  position: fixed;
+  /*position: fixed;*/
   top: 10vh;
-  left: calc(50% - 30rem);
+  /*left: calc(50% - 30rem);*/
 }
 
 .backdrop {

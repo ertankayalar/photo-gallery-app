@@ -8,6 +8,8 @@
   text-align: left;
   background-color: #000000;
   font-size: 16px;
+  /* background-size: cover;
+  height: 12rem; */
 }
 .galleryImage * {
   -webkit-box-sizing: border-box;
@@ -15,7 +17,7 @@
   -webkit-transition: all 0.4s ease-in;
   transition: all 0.4s ease-in;
 }
-.galleryImage img {
+.galleryImage figure {
   position: relative;
   max-width: 100%;
   vertical-align: top;
@@ -90,8 +92,8 @@
   bottom: 0;
   right: 0;
 }
-.galleryImage:hover img,
-.galleryImage.hover img {
+.galleryImage:hover figure,
+.galleryImage.hover figure {
   opacity: 0.4;
 }
 .galleryImage:hover figcaption,

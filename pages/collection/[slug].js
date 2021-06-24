@@ -1,11 +1,14 @@
 import Container from '../../components/layout/container'
 import Layout from '../../components/layout/layout'
 import PageHeader from '../../components/layout/page-header'
-import PhotoCard from '../../components/photos/card'
+import PhotoDetailCard from '../../components/photos/photo-detail-card'
 import Breadcrumb from '../../components/ui/breadcrumb'
+import { getCollection, getCollectionPhotos } from '../../lib/mongodb/photo'
 
-function CollectionPage({ collection }) {
-  const { name, description, photos } = collection
+function CollectionPage({ collection, collectionPhotos }) {
+  console.log(`collectionPhotos`, collectionPhotos)
+  console.log(`collection`, collection)
+  const { name, description, user, tags } = collection
   const breadcrumbs = [
     { url: '/', name: 'Home' },
     {
@@ -23,8 +26,13 @@ function CollectionPage({ collection }) {
 
       <Container>
         <div className='w-full grid grid-cols-3 gap-3'>
-          {photos.map((photo) => (
-            <PhotoCard photo={photo} />
+          {collectionPhotos.map((photo, index) => (
+            <PhotoDetailCard
+              photo={photo}
+              user={user[0]}
+              photos={collectionPhotos}
+              count={index}
+            />
           ))}
         </div>
       </Container>
@@ -58,9 +66,15 @@ export async function getStaticProps({ params }) {
   const res = await fetch(`${API_URL}/collections?slug=${slug}`)
   const data = await res.json()
 
+  const collection = await getCollection(slug)
+  const collectionPhotos = await getCollectionPhotos(slug)
+  console.log(`collection`, collection)
+  console.log(`collectionPhotos`, collectionPhotos)
   return {
     props: {
-      collection: data[0],
+      //collection: data[0],
+      collection,
+      collectionPhotos,
     },
     revalidate: 10,
   }
