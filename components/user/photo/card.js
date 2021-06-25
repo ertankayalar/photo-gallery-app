@@ -4,6 +4,7 @@ import EditIcon from '../../ui/icon/edit'
 import ConfirmBox from '../../ui/confim'
 import Backdrop from '../../ui/backdrop'
 const UserPhotoCard = ({ photo, onDelete, onEditPhoto }) => {
+  console.log(`photo`, photo)
   const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false)
   const {
     id,
@@ -14,7 +15,12 @@ const UserPhotoCard = ({ photo, onDelete, onEditPhoto }) => {
     // },
   } = photo
 
-  const mediumUrl = photo.photo != null ? photo.photo.formats.medium.url : ''
+  const photoUrl =
+    photo.photo != null
+      ? photo.photo.formats.medium != null
+        ? photo.photo.formats.medium.url
+        : photo.photo.formats.thumbnail.url
+      : ''
 
   function editPhotoModalHandler(event) {
     event.preventDefault()
@@ -37,9 +43,9 @@ const UserPhotoCard = ({ photo, onDelete, onEditPhoto }) => {
     <div className='text-center'>
       <div
         className='h-48 bg-gray-50 bg-cover '
-        style={{ backgroundImage: `url(${mediumUrl})` }}
+        style={{ backgroundImage: `url(${photoUrl})` }}
       >
-        {/* <img src={mediumUrl} alt={caption} className='shadow-xl' /> */}
+        {/* <img src={photoUrl} alt={caption} className='shadow-xl' /> */}
       </div>
       <p className='my-4 text-md text-gray-600'>{caption}</p>
 

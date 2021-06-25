@@ -48,13 +48,13 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
         url: url,
       },
     ])
-    console.log(`downloadOptions`, downloadOptions)
+    //   console.log(`downloadOptions`, downloadOptions)
   }, [activeIndex])
 
-  console.log(`photos`, photos)
-  console.log(`activePhoto`, activePhoto)
-  console.log(`active index`, activeIndex)
-  console.log(`photos.length`, photos.length)
+  //   console.log(`photos`, photos)
+  //   console.log(`activePhoto`, activePhoto)
+  //   console.log(`active index`, activeIndex)
+  //   console.log(`photos.length`, photos.length)
 
   function modalHandler(event) {
     event.preventDefault()
@@ -114,7 +114,7 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
       >
         <div className='modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50'>
           <button
-            className=' text-white hover:text-gray-400 mr-5  h-10 w-10'
+            className=' text-white hover:text-gray-400 mr-5  h-10 w-10  focus:outline-none'
             onClick={closeHandler}
           >
             <svg
@@ -154,7 +154,7 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
               valueField='id'
               onChange={(value) => {
                 window.open(value[0].url, '_blank')
-                console.log(value)
+                // console.log(value)
               }}
             />
           </div>
