@@ -32,6 +32,7 @@ function CollectionPage({ collection, collectionPhotos }) {
               user={user[0]}
               photos={collectionPhotos}
               count={index}
+              key={index}
             />
           ))}
         </div>

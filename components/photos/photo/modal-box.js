@@ -4,6 +4,7 @@ import Select from 'react-dropdown-select'
 const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
   const [activeIndex, setActiveIndex] = useState(count)
   const [activePhoto, setActivePhoto] = useState(photos[activeIndex])
+  const [downloadOptions, setDownloadOptions] = useState([])
   const options = [
     {
       id: 0,
@@ -19,6 +20,35 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
 
   useEffect(() => {
     setActivePhoto(photos[activeIndex])
+    const { formats, height, width, url } = activePhoto.files[0]
+
+    setDownloadOptions([
+      {
+        id: 0,
+        name: 'Download',
+      },
+      {
+        id: 1,
+        name: `Small (${formats.small.height}x${formats.small.width})`,
+        url: formats.small.url,
+      },
+      {
+        id: 2,
+        name: `Medium (${formats.medium.height}x${formats.medium.width})`,
+        url: formats.medium.url,
+      },
+      {
+        id: 3,
+        name: `Large (${formats.large.height}x${formats.large.width})`,
+        url: formats.large.url,
+      },
+      {
+        id: 4,
+        name: `Orginal (${height}x${width})`,
+        url: url,
+      },
+    ])
+    console.log(`downloadOptions`, downloadOptions)
   }, [activeIndex])
 
   console.log(`photos`, photos)
@@ -104,15 +134,29 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
         </div>
 
         <div className='w-full flex h-12 py-3 px-5'>
-          <div className='w-1/2'>
+          <div className='w-3/4'>
             {user.Firstname} {user.Lastname}
           </div>
-          <div className='w-1/2'>
-            {/* <Select
-              options={options}
-              values={[]}
-              onChange={(value) => console.log(value)}
-            /> */}
+          <div className='w-1/4'>
+            <Select
+              options={downloadOptions}
+              values={[
+                {
+                  id: 0,
+                  name: 'Download',
+                },
+              ]}
+              searchable={false}
+              placeholder='Download'
+              name='select'
+              separator={true}
+              labelField='name'
+              valueField='id'
+              onChange={(value) => {
+                window.open(value[0].url, '_blank')
+                console.log(value)
+              }}
+            />
           </div>
         </div>
         <div className='w-full flex items-center justify-center p-2'>
