@@ -20,6 +20,7 @@
     "postcss": "^8.2.8",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-dropdown-select": "^4.7.4",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
     "tailwindcss": "^2.0.3"
