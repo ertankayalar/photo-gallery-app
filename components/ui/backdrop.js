@@ -1,7 +1,7 @@
 function Backdrop({ onCancel, children }) {
   return (
     <div
-      className='backdrop  flex items-center justify-center'
+      className=' z-0 fixed w-full h-screen top-0 left-0 bg-black opacity-75'
       onClick={onCancel}
     >
       {children}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import cardStyles from './card.module.css'
 import PhotoModal from './photo-modal'
 import Backdrop from '../ui/backdrop'
+import ModalBox from './photo/modal-box'
 
 function PhotoDetailCard({ user, photo, photos, count }) {
   const { caption, description, files } = photo
@@ -42,18 +43,29 @@ function PhotoDetailCard({ user, photo, photos, count }) {
           onCancel={closeModalHandler}
         />
       )} */}
+
+      {/* {isPhotoModalOpen && (
+        <PhotoModal
+          user={user}
+          large={files[0].formats.large}
+          caption={caption}
+          onCancel={closeModalHandler}
+          photos={photos}
+          photo={photo}
+          count={count}
+        />
+      )}
+      {isPhotoModalOpen && <Backdrop onCancel={closeModalHandler} />} */}
       {isPhotoModalOpen && (
-        <Backdrop onCancel={closeModalHandler}>
-          <PhotoModal
-            user={user}
-            large={files[0].formats.large}
-            caption={caption}
-            onCancel={closeModalHandler}
-            photos={photos}
-            photo={photo}
-            count={count}
-          />
-        </Backdrop>
+        <ModalBox
+          user={user}
+          large={files[0].formats.large}
+          caption={caption}
+          onCancel={closeModalHandler}
+          photos={photos}
+          photo={photo}
+          count={count}
+        />
       )}
     </div>
   )

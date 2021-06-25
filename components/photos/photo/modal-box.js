@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-dropdown-select'
 
-function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
+const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
   const [activeIndex, setActiveIndex] = useState(count)
   const [activePhoto, setActivePhoto] = useState(photos[activeIndex])
   const options = [
@@ -52,29 +52,10 @@ function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
   }
 
   return (
-    <div className='w-screen h-screen fixed top-0 left-0 opacity-100 z-40 flex '>
-      <div className='w-full pt-3 z-40'>
-        <button
-          className=' text-white hover:text-gray-400 mr-5  h-10 w-10 absolute right-1'
-          onClick={closeHandler}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={1}
-              d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-            />
-          </svg>
-        </button>
-      </div>
+    <div className='modal fixed w-full h-full top-0 left-0 flex items-center justify-center z-20'>
+      <div className='modal-overlay absolute w-full h-full bg-gray-900 opacity-50'></div>
 
-      <div className='flex fixed left-0 w-1/6 h-4/5 justify-end z-40 top-0'>
+      <div className='flex fixed left-0 w-1/6 md:h-4/5 justify-end z-40 top-0'>
         <button
           className='text-white fixed top-60 mr-5 focus:outline-none disabled:opacity-40'
           onClick={prevHandler}
@@ -98,9 +79,30 @@ function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
       </div>
 
       <div
-        className='modal bg-white rounded fixed w-3/6 h-5/6 text-gray-600 z-50 top-5'
+        className='modal-container bg-white w-11/12 md:w-4/6 md:h-4/5 mx-auto rounded shadow-lg z-50 overflow-y-auto'
         onClick={modalHandler}
       >
+        <div className='modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50'>
+          <button
+            className=' text-white hover:text-gray-400 mr-5  h-10 w-10'
+            onClick={closeHandler}
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={1}
+                d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+              />
+            </svg>
+          </button>
+        </div>
+
         <div className='w-full flex h-12 py-3 px-5'>
           <div className='w-1/2'>
             {user.Firstname} {user.Lastname}
@@ -124,7 +126,7 @@ function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
         </div>
       </div>
 
-      <div className='flex fixed right-0 top-0 z-40 w-1/6 h-5/6 justify-start'>
+      <div className='flex fixed right-0 top-0 z-40 w-1/6 md:h-4/6 justify-start'>
         <button
           className='text-white fixed top-60 ml-5 focus:outline-none disabled:opacity-40'
           onClick={nextHandler}
@@ -150,4 +152,4 @@ function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
   )
 }
 
-export default PhotoModal
+export default ModalBox
