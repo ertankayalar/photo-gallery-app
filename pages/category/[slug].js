@@ -12,9 +12,9 @@ import {
 import PhotoCard from '../../components/photos/photo-card'
 
 const CategoryPage = ({ category, subCategories, collections }) => {
-  console.log(`collections`, collections)
-  console.log(`category`, category)
-  console.log(`subCategories`, subCategories)
+  // console.log(`collections`, collections)
+  // console.log(`category`, category)
+  // console.log(`subCategories`, subCategories)
   const breadcrumbs = [
     { url: '/', name: 'Home' },
     {
@@ -65,7 +65,7 @@ const CategoryPage = ({ category, subCategories, collections }) => {
 
 export async function getServerSideProps(context) {
   const { slug } = context.query
-  console.log(`slug`, slug)
+
   const collections = await getCategoryCollections(slug)
   const category = await getCategory(slug)
   const subCategories = await getSubCategories(slug)

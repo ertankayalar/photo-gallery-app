@@ -16,13 +16,15 @@ function PhotoDetailCard({ user, photo, photos, count }) {
   function closeModalHandler() {
     setPhotoModalOpen(false)
   }
-
+  console.log(`photo`, photo)
+  const photoUrl =
+    files[0].formats.medium != null ? files[0].formats.medium.url : ''
   return (
     <div className='w-full'>
       <div className={cardStyles.galleryImage} onClick={photoModalHandler}>
         <figure
           className='h-48 bg-cover'
-          style={{ backgroundImage: `url(${files[0].formats.medium.url})` }}
+          style={{ backgroundImage: `url(${photoUrl})` }}
         >
           {/* <img
           src={files[0].formats.medium.url}

@@ -3,11 +3,16 @@ import Layout from '../../components/layout/layout'
 import PageHeader from '../../components/layout/page-header'
 import PhotoDetailCard from '../../components/photos/photo-detail-card'
 import Breadcrumb from '../../components/ui/breadcrumb'
-import { getCollection, getCollectionPhotos } from '../../lib/mongodb/photo'
+
+import {
+  getCollection,
+  getCollectionPhotos,
+  getAllPublishedCollections,
+} from '../../lib/mongodb/photo'
 
 function CollectionPage({ collection, collectionPhotos }) {
-  console.log(`collectionPhotos`, collectionPhotos)
-  console.log(`collection`, collection)
+  // console.log(`collectionPhotos`, collectionPhotos)
+  // console.log(`collection`, collection)
   const { name, description, user, tags } = collection
   const breadcrumbs = [
     { url: '/', name: 'Home' },
@@ -42,10 +47,13 @@ function CollectionPage({ collection, collectionPhotos }) {
 }
 
 export async function getStaticPaths() {
-  const { API_URL } = process.env
-  const res = await fetch(`${API_URL}/collections`)
-  const data = await res.json()
-  const paths = data.map((collection) => {
+  // const { API_URL } = process.env
+  // const res = await fetch(`${API_URL}/collections`)
+  // const data = await res.json()
+
+  const collections = await getAllPublishedCollections()
+
+  const paths = collections.map((collection) => {
     return {
       params: {
         slug: collection.slug,
@@ -64,8 +72,8 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const { slug } = params
   const { API_URL } = process.env
-  const res = await fetch(`${API_URL}/collections?slug=${slug}`)
-  const data = await res.json()
+  // const res = await fetch(`${API_URL}/collections?slug=${slug}`)
+  // const data = await res.json()
 
   const collection = await getCollection(slug)
   const collectionPhotos = await getCollectionPhotos(slug)

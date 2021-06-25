@@ -22,7 +22,7 @@ function CollectionCard({ collection }) {
   }
 
   return (
-    <Link href={`/collections/${collection.slug}`}>
+    <Link href={`/collection/${collection.slug}`}>
       <a>
         <div className='w-full'>
           <div className='w-full flex '>
