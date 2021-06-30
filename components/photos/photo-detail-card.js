@@ -16,7 +16,7 @@ function PhotoDetailCard({ user, photo, photos, count }) {
   function closeModalHandler() {
     setPhotoModalOpen(false)
   }
-  console.log(`photo`, photo)
+  //console.log(`photo`, photo)
   const photoUrl =
     files[0].formats.medium != null ? files[0].formats.medium.url : ''
   return (

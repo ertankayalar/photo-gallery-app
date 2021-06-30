@@ -4,6 +4,7 @@ import Select from 'react-dropdown-select'
 function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
   const [activeIndex, setActiveIndex] = useState(count)
   const [activePhoto, setActivePhoto] = useState(photos[activeIndex])
+  const { Firstname, Lastname } = user
   const options = [
     {
       id: 0,
@@ -103,7 +104,7 @@ function PhotoModal({ photos, photo, count, user, large, caption, onCancel }) {
       >
         <div className='w-full flex h-12 py-3 px-5'>
           <div className='w-1/2'>
-            {user.Firstname} {user.Lastname}
+            {Firstname && Firstname} {Lastname && Lastname}
           </div>
           <div className='w-1/2'>
             {/* <Select

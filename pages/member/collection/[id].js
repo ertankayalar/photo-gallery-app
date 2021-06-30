@@ -387,7 +387,6 @@ function CollectionView({ collection, api_url, session }) {
   //   // }
   // }
 
-  // delete photo
   async function deletePhotoHandler(id) {
     const response = await axios.delete(`/api/user/photo/delete/${id}`, {
       params: {
