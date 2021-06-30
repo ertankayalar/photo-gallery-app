@@ -9,16 +9,19 @@ function UserCollectionCard({ collection }) {
   let mainPhoto = ''
   if (thumbPhotos[0] !== undefined) {
     mainPhoto = (
-      <img src={thumbPhotos[0].photo.formats.small.url} className='rounded-l' />
+      <img
+        src={thumbPhotos[0]?.photo?.formats?.small?.url}
+        className='rounded-l'
+      />
     )
   }
   let secondPhoto = ''
   if (thumbPhotos[1] !== undefined) {
-    secondPhoto = thumbPhotos[1].photo.formats.small.url
+    secondPhoto = thumbPhotos[1]?.photo?.formats?.small?.url
   }
   let thirdPhoto = ''
   if (thumbPhotos[2] !== undefined) {
-    thirdPhoto = thumbPhotos[2].photo.formats.small.url
+    thirdPhoto = thumbPhotos[2]?.photo?.formats?.small?.url
   }
 
   return (
