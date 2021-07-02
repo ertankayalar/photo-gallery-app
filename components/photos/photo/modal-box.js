@@ -163,10 +163,15 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
           <img src={activePhoto.files[0].formats.large.url} />
         </div>
         <div className='w-full text-center py-5'>
-          <p className='text-2xl font-normal  text-gray-700'>
-            {activePhoto.caption}
-          </p>
-          <p className='text-gray-500 text-sm'>{activePhoto.description}</p>
+          {activePhoto.caption && (
+            <p className='text-2xl font-normal  text-gray-700'>
+              {activePhoto.caption}
+            </p>
+          )}
+
+          {activePhoto.description && (
+            <p className='text-gray-500 text-sm'>{activePhoto.description}</p>
+          )}
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import cardStyles from './card.module.css'
-import PhotoModal from './photo-modal'
-import Backdrop from '../ui/backdrop'
+
 import ModalBox from './photo/modal-box'
 
 function PhotoDetailCard({ user, photo, photos, count }) {

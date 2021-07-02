@@ -12,8 +12,6 @@ import {
 } from '../../lib/mongodb/photo'
 
 function CollectionPage({ collection, collectionPhotos }) {
-  console.log(`collectionPhotos`, collectionPhotos)
-  console.log(`collection`, collection)
   const { name, description, user, tags, category } = collection
   const breadcrumbs = [
     { url: '/', name: 'Home' },
@@ -99,8 +97,7 @@ export async function getStaticProps({ params }) {
 
   const collection = await getCollection(slug)
   const collectionPhotos = await getCollectionPhotos(slug)
-  // console.log(`collection`, collection)
-  // console.log(`collectionPhotos`, collectionPhotos)
+
   return {
     props: {
       //collection: data[0],
