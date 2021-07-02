@@ -22,6 +22,7 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
     setActivePhoto(photos[activeIndex])
     const { formats, height, width, url } = activePhoto.files[0]
 
+    console.log(`activePhoto`, activePhoto)
     setDownloadOptions([
       {
         id: 0,
@@ -166,7 +167,7 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
           <p className='text-2xl font-normal  text-gray-700'>
             {activePhoto.caption}
           </p>
-          <p className='text-gray-500 text-sm'>{activePhoto.descripton}</p>
+          <p className='text-gray-500 text-sm'>{activePhoto.description}</p>
         </div>
       </div>
 
