@@ -22,7 +22,6 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
     setActivePhoto(photos[activeIndex])
     const { formats, height, width, url } = activePhoto.files[0]
 
-    console.log(`activePhoto`, activePhoto)
     setDownloadOptions([
       {
         id: 0,
