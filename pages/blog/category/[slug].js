@@ -17,7 +17,6 @@ const BlogCategory = ({ category, lastPage }) => {
   ]
   const { blog_posts } = category
 
-  console.log(`category`, category)
   return (
     <Layout>
       <Container>
@@ -72,7 +71,6 @@ export async function getStaticProps({ params }) {
 
   const postData = result.data
 
-  console.log(`postData`, postData[0])
   return {
     props: { category: postData[0], lastPage: 10 },
     revalidate: 10,

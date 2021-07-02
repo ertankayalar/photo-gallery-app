@@ -77,8 +77,6 @@ export async function getStaticProps({ params }) {
   const pageNumber = page === null ? 1 : +page
   const startRow = pageNumber == 1 ? 0 : (pageNumber - 1) * PAGE_SIZE
 
-  console.log(`startRow`, startRow)
-
   // LastPage
   const countResult = await axios.get(`${process.env.API_URL}/blog-posts/count`)
   const count = +countResult.data

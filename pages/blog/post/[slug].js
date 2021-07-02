@@ -9,8 +9,6 @@ import PostHeader from '../../../components/post/post-header'
 import Breadcrumb from '../../../components/ui/breadcrumb'
 
 function Post({ post, contentHtml }) {
-  console.log(`post`, post)
-  console.log(`contentHtml`, contentHtml)
   const { title, excerpt, content, blog_categories } = post
 
   const breadcrumbs = [
@@ -46,8 +44,6 @@ export async function getStaticPaths() {
   if (result.error) {
     console.log('Error:', result.error)
   }
-
-  console.log(`result.data`, result.data)
 
   const paths = result.data.map((post) => {
     return {
@@ -90,7 +86,6 @@ export async function getStaticProps({ params }) {
   const processedContent = await remark().use(html).process(postData[0].content)
   const contentHtml = processedContent.toString()
 
-  console.log(`postData`, postData[0])
   return {
     props: { post: postData[0], contentHtml },
     revalidate: 10,

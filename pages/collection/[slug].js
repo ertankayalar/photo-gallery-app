@@ -33,7 +33,7 @@ function CollectionPage({ collection, collectionPhotos }) {
       <Container>
         <div className='text-gray-500 my-2 text-xs md:text-sm flex justify-center items-center'>
           <span className='mr-5 pl-5'>
-            {category && (
+            {category && category.length > 0 && (
               <Link href={`/category/${category[0].slug}`}>
                 <a>{category[0].name}</a>
               </Link>
