@@ -46,7 +46,7 @@ const CategoryPage = ({ category, subCategories, collections }) => {
           </div>
           <div className='grid grid-cols-2 gap-4 px-1 py-2'>
             {subCategories.map((data) => (
-              <PhotoCard data={data} />
+              <PhotoCard data={data} key={data.url} />
             ))}
           </div>
         </Container>
@@ -55,7 +55,7 @@ const CategoryPage = ({ category, subCategories, collections }) => {
       <Container>
         <div className='grid grid-cols-2 gap-4 px-1 py-2'>
           {collections.map((data) => (
-            <PhotoCard data={data} />
+            <PhotoCard data={data} key={data.url} />
           ))}
         </div>
       </Container>
@@ -69,6 +69,8 @@ export async function getServerSideProps(context) {
   const collections = await getCategoryCollections(slug)
   const category = await getCategory(slug)
   const subCategories = await getSubCategories(slug)
+
+  console.log(`collections`, collections)
   return {
     props: {
       collections,

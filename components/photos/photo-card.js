@@ -2,23 +2,26 @@ import React from 'react'
 import Link from 'next/link'
 
 const PhotoCard = ({ data }) => {
-  const { name, photos, url, count, author } = data
+  const { name, photos, url, count, owner, tags } = data
+  console.log(`data`, data)
 
   let mainPhoto = ''
 
   if (photos[0] != undefined) {
-    mainPhoto = <img src={photos[0].formats.medium.url} className='rounded-l' />
+    mainPhoto = (
+      <img src={photos[0]?.formats?.medium?.url} className='rounded-l' />
+    )
   }
 
   let secondPhoto = ''
 
   if (photos[1] != undefined) {
-    secondPhoto = photos[1].formats.medium.url
+    secondPhoto = photos[1]?.formats?.medium?.url
   }
 
   let thirdPhoto = ''
   if (photos[2] != undefined) {
-    thirdPhoto = photos[2].formats.medium.url
+    thirdPhoto = photos[2]?.formats?.medium?.url
   }
 
   return (
@@ -61,9 +64,23 @@ const PhotoCard = ({ data }) => {
           </div>
           <div className='w-4/4 py-2'>
             <div className='w-full font-semibold py-2'>{name}</div>
-            <div className='w-full  text-gray-600'>
-              {photos.length > 0 && <span>{count} photos</span>}
-              {author && <span className='ml-2'>{author}</span>}
+            {/* {owner && (
+              <div className='w-full text-sm text-gray-700 mb-2'>
+                {owner?.Firstname} {owner?.Lastname}
+              </div>
+            )} */}
+            <div className='w-full  text-gray-600 text-sm'>
+              {photos.length > 0 && (
+                <span className='mr-2'>{photos.length} photos</span>
+              )}
+
+              {tags?.map((tag) => (
+                <Link href={`/tag/${tag.slug}`} key={tag.slug}>
+                  <a className='mr-3 hover:underline px-2 py-1 bg-gray-50 rounded-sm border shadow-sm text-sm'>
+                    {tag.name}
+                  </a>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
