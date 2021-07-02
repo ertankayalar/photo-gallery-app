@@ -2,8 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 const PhotoCard = ({ data }) => {
-  const { name, photos, url, count, owner, tags } = data
-  console.log(`data`, data)
+  const { name, photos, url, owner, tags } = data
 
   let mainPhoto = ''
 

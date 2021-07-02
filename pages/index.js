@@ -2,28 +2,33 @@ import Layout from '../components/layout/layout'
 import Container from '../components/layout/container'
 import Hero from '../components/ui/hero'
 import axios from 'axios'
-import FeaturedCollections from '../components/photos/featured-collections'
 
-export default function Home({ featuredCollections }) {
+import { getFeaturedCollections } from '../lib/mongodb/utils'
+import HomeFeatured from '../components/photos/home-featured'
+
+export default function Home({ collections }) {
   return (
     <Layout>
       <Hero />
+
       <Container>
-        <FeaturedCollections collections={featuredCollections} />
+        <HomeFeatured collections={collections} />
       </Container>
     </Layout>
   )
 }
 
 export const getStaticProps = async () => {
-  const result = await axios.get(`${process.env.API_URL}/collections`, {
-    params: {
-      featured: true,
-    },
-  })
+  const collections = await getFeaturedCollections()
+  //console.log(`collections`, collections)
+  // const result = await axios.get(`${process.env.API_URL}/collections`, {
+  //   params: {
+  //     featured: true,
+  //   },
+  // })
 
   return {
-    props: { featuredCollections: result.data },
+    props: { collections: collections },
     revalidate: 10,
   }
 }
