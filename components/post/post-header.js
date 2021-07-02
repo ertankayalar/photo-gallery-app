@@ -20,7 +20,7 @@ export default function PostHeader({ post }) {
         </span>
         <span className=' border-l pl-5 text-xs md:text-md font-semibold'>
           {blog_categories.map((cat) => (
-            <Link href={`/blo/category/${cat.slug}/`} key={cat.slug}>
+            <Link href={`/blog/category/${cat.slug}/`} key={cat.slug}>
               <a className='mr-3 hover:underline'>{cat.name}</a>
             </Link>
           ))}

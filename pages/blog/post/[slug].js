@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import remark from 'remark'
 import html from 'remark-html'
-import Container from '../../components/layout/container'
-import Layout from '../../components/layout/layout'
-import PageHeader from '../../components/layout/page-header'
-import PostHeader from '../../components/post/post-header'
-import Breadcrumb from '../../components/ui/breadcrumb'
+import Container from '../../../components/layout/container'
+import Layout from '../../../components/layout/layout'
+import PageHeader from '../../../components/layout/page-header'
+import PostHeader from '../../../components/post/post-header'
+import Breadcrumb from '../../../components/ui/breadcrumb'
 
 function Post({ post, contentHtml }) {
   console.log(`post`, post)
@@ -93,6 +93,7 @@ export async function getStaticProps({ params }) {
   console.log(`postData`, postData[0])
   return {
     props: { post: postData[0], contentHtml },
+    revalidate: 10,
   }
 }
 
