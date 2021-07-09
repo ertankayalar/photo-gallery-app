@@ -8,10 +8,35 @@ import {
   getCategory,
   getSubCategories,
   getCategoryCollections,
+  getCategoryCollectionCount,
 } from '../../lib/mongodb/category'
 import PhotoCard from '../../components/photos/photo-card'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-const CategoryPage = ({ category, subCategories, collections }) => {
+const CategoryPage = ({
+  category,
+  subCategories,
+  firstPageCollections,
+  collectionCount,
+}) => {
+  const [collections, setCollections] = useState(firstPageCollections)
+  const [hasMore, setHasMore] = useState(true)
+  console.log(`collectionCount`, collectionCount)
+  const getMoreCollection = async () => {
+    const response = await axios.get(
+      `/api/category/collection?slug=${category.slug}&skip=${collections.length}`
+    )
+    console.log(`response`, response)
+    const moreCollections = response.data
+    setCollections((collections) => [...collections, ...moreCollections])
+  }
+
+  useEffect(() => {
+    setHasMore(collectionCount > collections.length ? true : false)
+  }, [collections])
+
   // console.log(`collections`, collections)
   // console.log(`category`, category)
   // console.log(`subCategories`, subCategories)
@@ -53,11 +78,19 @@ const CategoryPage = ({ category, subCategories, collections }) => {
       )}
 
       <Container>
-        <div className='grid grid-cols-2 gap-4 px-1 py-2'>
-          {collections.map((data) => (
-            <PhotoCard data={data} key={data.url} />
-          ))}
-        </div>
+        <InfiniteScroll
+          dataLength={collections.length}
+          hasMore={hasMore}
+          next={getMoreCollection}
+          loader={<h4>Loading...</h4>}
+          endMessage={<p className='text-center'>You have seen it all!</p>}
+        >
+          <div className='grid grid-cols-2 gap-4 px-1 py-2'>
+            {collections.map((data) => (
+              <PhotoCard data={data} key={data.url} />
+            ))}
+          </div>
+        </InfiniteScroll>
       </Container>
     </Layout>
   )
@@ -66,16 +99,16 @@ const CategoryPage = ({ category, subCategories, collections }) => {
 export async function getServerSideProps(context) {
   const { slug } = context.query
 
-  const collections = await getCategoryCollections(slug)
+  const firstPageCollections = await getCategoryCollections(slug, 4)
   const category = await getCategory(slug)
   const subCategories = await getSubCategories(slug)
-
-  console.log(`collections`, collections)
+  const collectionCount = await getCategoryCollectionCount(slug)
   return {
     props: {
-      collections,
+      firstPageCollections,
       category,
       subCategories,
+      collectionCount,
     },
   }
 }

@@ -6,6 +6,8 @@ import PageHeader from '../../components/layout/page-header'
 import Breadcrumb from '../../components/ui/breadcrumb'
 import { getTopCategories } from '../../lib/mongodb/category'
 import PhotoCard from '../../components/photos/photo-card'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useEffect, useState } from 'react'
 
 const CategoryHomePage = ({ topCategories }) => {
   console.log(`topCategories`, topCategories)
