@@ -33,8 +33,8 @@ function PhotoDetailCard({ user, photo, photos, count }) {
           <a href='#'></a>
         </figure>
         <figcaption className='text-white z-20'>
-          <h3>{caption}</h3>
-          <p>{description}</p>
+          {caption && <h3>{caption}</h3>}
+          {description && <p>{description}</p>}
         </figcaption>
       </div>
       {/* {isPhotoModalOpen && (

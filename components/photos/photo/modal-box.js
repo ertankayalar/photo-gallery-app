@@ -135,7 +135,8 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
 
         <div className='w-full flex h-12 py-3 px-5'>
           <div className='w-3/4'>
-            {user.Firstname} {user.Lastname}
+            {user.Firstname && user.Firstname}
+            {user.Lastname && user.Lastname}
           </div>
           <div className='w-1/4'>
             <Select
@@ -160,7 +161,7 @@ const ModalBox = ({ photos, photo, count, user, large, caption, onCancel }) => {
           </div>
         </div>
         <div className='w-full flex items-center justify-center p-2'>
-          <img src={activePhoto.files[0].formats.large.url} />
+          <img src={activePhoto?.files[0]?.formats?.large?.url} />
         </div>
         <div className='w-full text-center py-5'>
           {activePhoto.caption && (
