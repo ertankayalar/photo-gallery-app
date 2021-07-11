@@ -1,57 +1,57 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
 function CollectionCard({ collection }) {
-  const { name, photos } = collection
+  const { name, photos } = collection;
 
-  const thumbPhotos = photos.slice(0, 3)
+  const thumbPhotos = photos.slice(0, 3);
 
-  let mainPhoto = ''
+  let mainPhoto = "";
   if (thumbPhotos[0] !== undefined) {
     mainPhoto = (
-      <img src={thumbPhotos[0].photo.formats.small.url} className='rounded-l' />
-    )
+      <img src={thumbPhotos[0].photo.formats.small.url} className="rounded-l" />
+    );
   }
-  let secondPhoto = ''
+  let secondPhoto = "";
   if (thumbPhotos[1] !== undefined) {
-    secondPhoto = thumbPhotos[1].photo.formats.small.url
+    secondPhoto = thumbPhotos[1].photo.formats.small.url;
   }
-  let thirdPhoto = ''
+  let thirdPhoto = "";
   if (thumbPhotos[2] !== undefined) {
-    thirdPhoto = thumbPhotos[2].photo.formats.small.url
+    thirdPhoto = thumbPhotos[2].photo.formats.small.url;
   }
 
   return (
     <Link href={`/collection/${collection.slug}`}>
       <a>
-        <div className='w-full'>
-          <div className='w-full flex '>
+        <div className="w-full">
+          <div className="flex w-full ">
             <div
-              className='w-3/4'
+              className="w-3/4"
               style={{
-                paddingRight: '2px',
+                paddingRight: "2px",
               }}
             >
               {mainPhoto}
             </div>
-            <div className='w-1/4'>
+            <div className="w-1/4">
               <div
-                className='w-full h-1/2'
+                className="w-full h-1/2"
                 style={{
-                  paddingBottom: '2px',
+                  paddingBottom: "2px",
                 }}
               >
                 <div
-                  className='h-full w-full bg-no-repeat bg-center bg-cover rounded-tr'
+                  className="w-full h-full bg-center bg-no-repeat bg-cover rounded-tr"
                   style={{
                     backgroundImage: `url(${secondPhoto})`,
                   }}
                 ></div>
               </div>
 
-              <div className='w-full h-1/2'>
+              <div className="w-full h-1/2">
                 <div
-                  className='h-full bg-no-repeat bg-center bg-cover rounded-br'
+                  className="h-full bg-center bg-no-repeat bg-cover rounded-br"
                   style={{
                     backgroundImage: `url(${thirdPhoto})`,
                   }}
@@ -59,17 +59,17 @@ function CollectionCard({ collection }) {
               </div>
             </div>
           </div>
-          <div className='w-4/4 py-2'>
-            <div className='w-full font-semibold py-2'>{name}</div>
-            <div className='w-full  text-gray-600'>
+          <div className="py-2 w-4/4">
+            <div className="w-full py-2 font-semibold">{name}</div>
+            <div className="w-full text-gray-600">
               <span>{collection.photos.length} photos</span>
-              <span className='ml-2'>by AuthorName</span>
+              <span className="ml-2">by AuthorName</span>
             </div>
           </div>
         </div>
       </a>
     </Link>
-  )
+  );
 }
 
-export default CollectionCard
+export default CollectionCard;

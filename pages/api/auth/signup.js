@@ -1,45 +1,45 @@
-import axios from 'axios'
-import { getSession } from 'next-auth/client'
+import axios from "axios";
+import { getSession } from "next-auth/client";
 
 async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return
+  if (req.method !== "POST") {
+    return;
   }
-  console.clear()
+  console.clear();
   // is authenticated
-  const session = await getSession({ req: req })
+  const session = await getSession({ req: req });
 
   if (session) {
-    res.status(401).json({ message: 'Already authenticated!' })
-    return
+    res.status(401).json({ message: "Already authenticated!" });
+    return;
   }
 
-  const data = req.body
-  const { email, password, subscribe } = data
-  console.log('email', email)
+  const data = req.body;
+  const { email, password, subscribe } = data;
+  console.log("email", email);
   if (
     !email ||
-    !email.includes('@') ||
+    !email.includes("@") ||
     !password ||
     password.trim().length < 7
   ) {
     res.status(422).json({
       message:
-        'invalid input - password should also be least 7 characters long',
-    })
-    return
+        "invalid input - password should also be least 7 characters long",
+    });
+    return;
   }
 
   // check email is exist ?
   const existingUser = await axios.get(
     `${process.env.API_URL}/users/?email=${email}`
-  )
-  console.log(`existingUser`, existingUser)
+  );
+  console.log(`existingUser`, existingUser);
 
   if (existingUser.error) {
-    res.status(422).json({ message: 'user exists already' })
-    console.log('user exist')
-    return
+    res.status(422).json({ message: "user exists already" });
+    console.log("user exist");
+    return;
   }
 
   // create user
@@ -49,15 +49,15 @@ async function handler(req, res) {
     email: email,
     password: password,
     subscribe: subscribe,
-  })
+  });
 
-  console.log(`result`, result)
+  console.log(`result`, result);
 
   if (result.status == 201) {
-    res.status(201).json({ message: 'User created!', ...result.data })
+    res.status(201).json({ message: "User created!", ...result.data });
   } else {
-    res.status(result.status).json({ message: result.error })
+    res.status(result.status).json({ message: result.error });
   }
 }
 
-export default handler
+export default handler;

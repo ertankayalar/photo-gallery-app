@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { getSession } from 'next-auth/client'
-import axios from 'axios'
-import Link from 'next/link'
-import Layout from '../../../components/layout/layout'
-import Container from '../../../components/layout/container'
-import Backdrop from '../../../components/ui/backdrop'
-import ConfirmBox from '../../../components/ui/confim'
-import EditIcon from '../../../components/ui/icon/edit'
-import DeleteIcon from '../../../components/ui/icon/delete'
-import UserPhotoCard from '../../../components/user/photo/card'
-import PhotoForm from '../../../components/user/photo/form'
-import Router from 'next/router'
-import Breadcrumb from '../../../components/ui/breadcrumb'
+import React, { useState } from "react";
+import { getSession } from "next-auth/client";
+import axios from "axios";
+import Link from "next/link";
+import Layout from "../../../components/layout/layout";
+import Container from "../../../components/layout/container";
+import Backdrop from "../../../components/ui/backdrop";
+import ConfirmBox from "../../../components/ui/confim";
+import EditIcon from "../../../components/ui/icon/edit";
+import DeleteIcon from "../../../components/ui/icon/delete";
+import UserPhotoCard from "../../../components/user/photo/card";
+import PhotoForm from "../../../components/user/photo/form";
+import Router from "next/router";
+import Breadcrumb from "../../../components/ui/breadcrumb";
 
 /**
  *  Collection View
@@ -19,7 +19,7 @@ import Breadcrumb from '../../../components/ui/breadcrumb'
  *
  */
 
-const calcPercent = (value, total) => Math.round((value / total) * 100)
+const calcPercent = (value, total) => Math.round((value / total) * 100);
 
 // show collection and photos
 // add new photos
@@ -27,17 +27,17 @@ const calcPercent = (value, total) => Math.round((value / total) * 100)
 // edit collection
 
 function CollectionView({ collection, api_url, session }) {
-  const [userCollection, setUserCollection] = useState(collection)
-  const [userPhotos, setUserPhotos] = useState(collection.photos)
-  const [editPhoto, setEditPhoto] = useState(null)
-  const [percent, setPercent] = useState(0)
-  const { id, name, description } = collection
-  const [isPhotoModalOpen, setPhotoModalOpen] = useState(false)
-  const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false)
-  const [isUploadSuccess, setIsUploadSuccess] = useState(false)
+  const [userCollection, setUserCollection] = useState(collection);
+  const [userPhotos, setUserPhotos] = useState(collection.photos);
+  const [editPhoto, setEditPhoto] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const { id, name, description } = collection;
+  const [isPhotoModalOpen, setPhotoModalOpen] = useState(false);
+  const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false);
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const breadcrumbs = [
-    { url: '/', name: 'Home' },
+    { url: "/", name: "Home" },
     {
       url: `/member/collections/`,
       name: `My Collections`,
@@ -47,42 +47,42 @@ function CollectionView({ collection, api_url, session }) {
       name: userCollection.name,
       last: true,
     },
-  ]
+  ];
 
   // Open Photo Modal Handler
   function photoModalHandler() {
-    setPhotoModalOpen(true)
+    setPhotoModalOpen(true);
   }
 
   // Close Add Photo Modal Box
   function closeModalHandler() {
-    setPhotoModalOpen(false)
-    setEditPhoto(null)
+    setPhotoModalOpen(false);
+    setEditPhoto(null);
   }
 
   // Open Edit Photo Modal Box
   function editPhotoModalHandler(photo) {
-    setEditPhoto(photo)
-    photoModalHandler()
+    setEditPhoto(photo);
+    photoModalHandler();
   }
 
   // Open Collection Delete Confirm Box
   function openDeleteCollectionHandler() {
-    setConfirmBoxOpen(true)
+    setConfirmBoxOpen(true);
   }
 
   // Close Collection Delete Confirm Box
   function closeCollectionDeleteConfirmHandler() {
-    setConfirmBoxOpen(false)
+    setConfirmBoxOpen(false);
   }
 
   async function deletePhotos(id) {
-    const res = await axios.delete(`/api/user/photo/delete/${id}`)
+    const res = await axios.delete(`/api/user/photo/delete/${id}`);
   }
   // Delete Collection from Strapi
   async function onDeleteCollection() {
-    console.log(`userCollection.id delete`, userCollection.id)
-    setConfirmBoxOpen(false)
+    console.log(`userCollection.id delete`, userCollection.id);
+    setConfirmBoxOpen(false);
     // api/user/collection
 
     // delete all userPhotos
@@ -97,7 +97,7 @@ function CollectionView({ collection, api_url, session }) {
 
     // delete userCollection
 
-    const res = await userPhotos.map((item) => deletePhotos(item.id))
+    const res = await userPhotos.map((item) => deletePhotos(item.id));
 
     const response = await axios.delete(
       `/api/collection/delete/${userCollection.id}`
@@ -106,12 +106,12 @@ function CollectionView({ collection, api_url, session }) {
       //     id: userCollection.id,
       //   },
       // }
-    )
+    );
     if (response.status == 200) {
-      console.log('Collection removed')
-      Router.push(`/member/collections/`)
+      console.log("Collection removed");
+      Router.push(`/member/collections/`);
     } else {
-      console.log(`response`, response)
+      console.log(`response`, response);
     }
   }
 
@@ -121,24 +121,24 @@ function CollectionView({ collection, api_url, session }) {
    */
 
   async function addPhotoHandler(data) {
-    console.log('Photo data', data)
+    console.log("Photo data", data);
 
     const newPhotoData = {
       caption: data.caption,
       description: data.description,
       collection_id: collection._id,
-    }
+    };
 
     // build form data
-    const frmData = new FormData()
+    const frmData = new FormData();
 
     if (data.photoFiles != null) {
-      frmData.append('files.photo', data.photoFiles[0])
+      frmData.append("files.photo", data.photoFiles[0]);
     }
 
-    frmData.append('data', JSON.stringify(newPhotoData))
+    frmData.append("data", JSON.stringify(newPhotoData));
 
-    console.log(`frmData`, frmData)
+    console.log(`frmData`, frmData);
 
     try {
       const resAdd = await axios.post(`${api_url}/photos`, frmData, {
@@ -146,22 +146,22 @@ function CollectionView({ collection, api_url, session }) {
           setPercent(calcPercent(progress.loaded, progress.total)),
         headers: {
           Authorization: `Bearer ${session.jwt}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      })
+      });
 
-      console.log('Add Photo Result =>', resAdd)
+      console.log("Add Photo Result =>", resAdd);
       if (resAdd.status == 200) {
-        console.log('upload success')
-        setIsUploadSuccess(true)
-        setUserPhotos([...userPhotos, resAdd.data])
+        console.log("upload success");
+        setIsUploadSuccess(true);
+        setUserPhotos([...userPhotos, resAdd.data]);
 
-        setPhotoModalOpen(false)
-        setEditPhoto(null)
+        setPhotoModalOpen(false);
+        setEditPhoto(null);
       }
     } catch (error) {
-      console.log('Exception Error', error)
+      console.log("Exception Error", error);
     }
   }
 
@@ -233,21 +233,21 @@ function CollectionView({ collection, api_url, session }) {
    * @param {object} data
    */
   async function updatePhotoHandler(data) {
-    console.log('Upload data', data)
+    console.log("Upload data", data);
 
     const newPhotoData = {
       id: data.id,
       caption: data.caption,
       description: data.description,
       collection_id: collection._id,
-    }
+    };
 
     // build form data
-    const frmData = new FormData()
+    const frmData = new FormData();
     if (data.photoFiles != null) {
-      frmData.append('files.photo', data.photoFiles[0])
+      frmData.append("files.photo", data.photoFiles[0]);
     }
-    frmData.append('data', JSON.stringify(newPhotoData))
+    frmData.append("data", JSON.stringify(newPhotoData));
 
     try {
       const resUpd = await axios.put(
@@ -258,31 +258,31 @@ function CollectionView({ collection, api_url, session }) {
             setPercent(calcPercent(progress.loaded, progress.total)),
           headers: {
             Authorization: `Bearer ${session.jwt}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
         }
-      )
-      console.log('Update Photo Result => ', resUpd)
+      );
+      console.log("Update Photo Result => ", resUpd);
       if (resUpd.status == 200) {
-        console.log('update success')
-        setIsUploadSuccess(true)
+        console.log("update success");
+        setIsUploadSuccess(true);
 
         setUserPhotos(
           userPhotos.map((uphoto) => {
             if (uphoto.id === newPhotoData.id) {
-              return resUpd.data
+              return resUpd.data;
             } else {
-              return uphoto
+              return uphoto;
             }
           })
-        )
+        );
         // setUserPhotos([...userPhotos, resAdd.data])
-        setPhotoModalOpen(false)
-        setEditPhoto(null)
+        setPhotoModalOpen(false);
+        setEditPhoto(null);
       }
     } catch (error) {
-      console.log('Exception Error', error)
+      console.log("Exception Error", error);
     }
   }
 
@@ -392,44 +392,44 @@ function CollectionView({ collection, api_url, session }) {
       params: {
         id: id,
       },
-    })
+    });
 
     if (response.status == 200) {
-      console.log('Photo removed')
-      const deletedPhoto = userPhotos.findIndex((photo) => photo.id === id)
+      console.log("Photo removed");
+      const deletedPhoto = userPhotos.findIndex((photo) => photo.id === id);
       //      console.log('deleted photo', deletedPhoto)
-      setUserPhotos(userPhotos.filter((photo) => photo.id !== id))
+      setUserPhotos(userPhotos.filter((photo) => photo.id !== id));
     } else {
-      console.log(`response`, response)
+      console.log(`response`, response);
     }
   }
 
   return (
     <Layout>
-      <Container className='pl-2'>
+      <Container className="pl-2">
         <Breadcrumb breadcrumbs={breadcrumbs} />
       </Container>
       <Container>
-        <div className='w-full text-center bg-gray-50 my-10 pb-10 rounded border'>
-          <div className='w-full py-2 px-2  flex justify-end text-sm'>
+        <div className="w-full pb-10 my-10 text-center border rounded bg-gray-50">
+          <div className="flex justify-end w-full px-2 py-2 text-sm">
             <Link href={`/member/collection/edit/${id}`}>
-              <a className='bg-gray-100 border text-gray-600 hover:bg-gray-200 hover:text-gray-800 px-2 py-2 rounded flex items-center'>
-                <EditIcon className='h-4 w-4 mr-1' />
+              <a className="flex items-center px-2 py-2 text-gray-600 bg-gray-100 border rounded hover:bg-gray-200 hover:text-gray-800">
+                <EditIcon className="w-4 h-4 mr-1" />
                 Edit
               </a>
             </Link>
 
             <button
-              className='mx-2 bg-gray-100 border text-gray-600 hover:bg-gray-200 hover:text-gray-800  px-2 py-2 rounded flex items-center'
+              className="flex items-center px-2 py-2 mx-2 text-gray-600 bg-gray-100 border rounded hover:bg-gray-200 hover:text-gray-800"
               onClick={openDeleteCollectionHandler}
             >
-              <DeleteIcon className='h-4 w-4 mr-1' />
+              <DeleteIcon className="w-4 h-4 mr-1" />
               Delete
             </button>
             {isConfirmBoxOpen && (
               <Container>
                 <ConfirmBox
-                  title='Collection will be deleted ?'
+                  title="Collection will be deleted ?"
                   message={`Please confirm to delete collection ${userCollection.name}`}
                   onConfirm={onDeleteCollection}
                   onCancel={closeCollectionDeleteConfirmHandler}
@@ -441,14 +441,14 @@ function CollectionView({ collection, api_url, session }) {
             )}
           </div>
 
-          <h2 className='text-2xl text-gray-700 my-3'>{name}</h2>
-          <p className='text-gray-500 text-sm'>{description}</p>
+          <h2 className="my-3 text-2xl text-gray-700">{name}</h2>
+          <p className="text-sm text-gray-500">{description}</p>
         </div>
       </Container>
-      <Container className='w-full flex items-center justify-center  '>
+      <Container className="flex items-center justify-center w-full ">
         <button
           onClick={photoModalHandler}
-          className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'
+          className="px-4 py-3 my-5 text-white bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-800 focus:outline-none"
         >
           Add Photo
         </button>
@@ -468,9 +468,9 @@ function CollectionView({ collection, api_url, session }) {
       {isPhotoModalOpen && <Backdrop onCancel={closeModalHandler} />}
 
       <Container>
-        <div className='w-full px-5 py-10 '>
-          <h2 className='text-2xl text-gray-600 text-center my-5'>Photos</h2>
-          <div className='w-full grid grid-cols-3 gap-2'>
+        <div className="w-full px-5 py-10 ">
+          <h2 className="my-5 text-2xl text-center text-gray-600">Photos</h2>
+          <div className="grid w-full grid-cols-3 gap-2">
             {userPhotos.map((photo) => (
               <UserPhotoCard
                 photo={photo}
@@ -482,23 +482,23 @@ function CollectionView({ collection, api_url, session }) {
         </div>
       </Container>
     </Layout>
-  )
+  );
 }
 
 export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req })
+  const session = await getSession({ req: context.req });
   if (!session) {
     return {
       redirect: {
-        destination: '/auth',
+        destination: "/auth",
         permanent: false,
       },
-    }
+    };
   }
 
-  const { API_URL } = process.env
-  const { id } = context.query
-  const userId = session.user.id
+  const { API_URL } = process.env;
+  const { id } = context.query;
+  const userId = session.user.id;
 
   const resEditcollection = await axios.get(
     `${API_URL}/collections/${id}?user=${userId}`,
@@ -507,11 +507,11 @@ export async function getServerSideProps(context) {
         Authorization: `Bearer ${session.jwt}`,
       },
     }
-  )
+  );
 
   // get collection data
   if (resEditcollection.error) {
-    console.log(`Error:`, resEditcollection.error)
+    console.log(`Error:`, resEditcollection.error);
   }
 
   return {
@@ -520,7 +520,7 @@ export async function getServerSideProps(context) {
       api_url: API_URL,
       session,
     },
-  }
+  };
 }
 
-export default CollectionView
+export default CollectionView;

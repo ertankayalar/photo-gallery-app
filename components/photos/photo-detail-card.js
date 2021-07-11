@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import cardStyles from './card.module.css'
+import { useState } from "react";
+import cardStyles from "./card.module.css";
 
-import ModalBox from './photo/modal-box'
+import ModalBox from "./photo/modal-box";
 
 function PhotoDetailCard({ user, photo, photos, count }) {
-  const { caption, description, files } = photo
+  const { caption, description, files } = photo;
 
-  const [isPhotoModalOpen, setPhotoModalOpen] = useState(false)
+  const [isPhotoModalOpen, setPhotoModalOpen] = useState(false);
 
   function photoModalHandler() {
-    setPhotoModalOpen(true)
+    setPhotoModalOpen(true);
   }
 
   function closeModalHandler() {
-    setPhotoModalOpen(false)
+    setPhotoModalOpen(false);
   }
   //console.log(`photo`, photo)
   const photoUrl =
-    files[0].formats.medium != null ? files[0].formats.medium.url : ''
+    files[0].formats.medium != null ? files[0].formats.medium.url : "";
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <div className={cardStyles.galleryImage} onClick={photoModalHandler}>
         <figure
-          className='h-48 bg-cover'
+          className="h-48 bg-cover"
           style={{ backgroundImage: `url(${photoUrl})` }}
         >
           {/* <img
@@ -30,9 +30,9 @@ function PhotoDetailCard({ user, photo, photos, count }) {
           alt={caption}
           className='shadow-xl'
         /> */}
-          <a href='#'></a>
+          <a href="#"></a>
         </figure>
-        <figcaption className='text-white z-20'>
+        <figcaption className="z-20 text-white">
           {caption && <h3>{caption}</h3>}
           {description && <p>{description}</p>}
         </figcaption>
@@ -69,7 +69,7 @@ function PhotoDetailCard({ user, photo, photos, count }) {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default PhotoDetailCard
+export default PhotoDetailCard;

@@ -24,9 +24,9 @@ function MyCollections({ collections }) {
       </Container>
       <PageHeader title='My Collections' />
 
-      <Container className='w-full flex items-center justify-center  '>
+      <Container className='flex items-center justify-center w-full '>
         <Link href='/member/collection/add'>
-          <a className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'>
+          <a className='px-4 py-3 my-5 text-white bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-800 focus:outline-none'>
             New Collection
           </a>
         </Link>

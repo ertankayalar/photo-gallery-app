@@ -1,10 +1,10 @@
-import Layout from '../components/layout/layout'
-import Container from '../components/layout/container'
-import Hero from '../components/ui/hero'
-import axios from 'axios'
+import Layout from "../components/layout/layout";
+import Container from "../components/layout/container";
+import Hero from "../components/ui/hero";
+import axios from "axios";
 
-import { getFeaturedCollections } from '../lib/mongodb/utils'
-import HomeFeatured from '../components/photos/home-featured'
+import { getFeaturedCollections } from "../lib/mongodb/utils";
+import HomeFeatured from "../components/photos/home-featured";
 
 export default function Home({ collections }) {
   return (
@@ -15,11 +15,11 @@ export default function Home({ collections }) {
         <HomeFeatured collections={collections} />
       </Container>
     </Layout>
-  )
+  );
 }
 
 export const getStaticProps = async () => {
-  const collections = await getFeaturedCollections()
+  const collections = await getFeaturedCollections();
   //console.log(`collections`, collections)
   // const result = await axios.get(`${process.env.API_URL}/collections`, {
   //   params: {
@@ -30,5 +30,5 @@ export const getStaticProps = async () => {
   return {
     props: { collections: collections },
     revalidate: 10,
-  }
-}
+  };
+};

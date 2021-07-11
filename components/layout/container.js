@@ -6,7 +6,7 @@ const Container = ({ children, className, style }) => {
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default Container
+export default Container;
