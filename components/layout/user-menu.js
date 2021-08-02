@@ -21,7 +21,7 @@ function UserMenu() {
       {!session && !loading && (
         <Link href="/auth">
           <a className="w-full px-1 py-2 text-left md:py-1 font-header md:w-auto hover:underline">
-            Sign up
+            Sign in / Sign up
           </a>
         </Link>
       )}
