@@ -1,38 +1,82 @@
-import React, { useState, useEffect, useContext } from 'react'
-import Router from 'next/router'
-import Container from '../../../components/layout/container'
+import React, { useState, useEffect, useContext } from "react";
+import Router from "next/router";
+import Container from "../../../components/layout/container";
+import DropdownTreeSelect from "react-dropdown-tree-select";
+import CreatableSelect from "react-select/creatable";
+import "react-dropdown-tree-select/dist/styles.css";
+import styles from "./form.module.css";
 
 const UserCollectionForm = ({ collection = null, onSubmit }) => {
   const [id, setId] =
-    collection != null ? useState(collection.id) : useState(null)
+    collection != null ? useState(collection.id) : useState(null);
   const [name, setName] =
-    collection != null ? useState(collection.name) : useState('')
+    collection != null ? useState(collection.name) : useState("");
   const [description, setDescription] =
-    collection != null ? useState(collection.description) : useState('')
-  const [error, setError] = useState('')
-  const [statusMsg, setStatusMsg] = useState('')
-  const formTitle = collection == null ? 'New Collection' : 'Update Collection'
-  const submitButtonText = collection == null ? 'Add' : 'Update'
+    collection != null ? useState(collection.description) : useState("");
+  const [error, setError] = useState("");
+  const [statusMsg, setStatusMsg] = useState("");
+  const formTitle = collection == null ? "New Collection" : "Update Collection";
+  const submitButtonText = collection == null ? "Add" : "Update";
+
+  const tagOptions = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
+
+  const categoryData = {
+    label: "search me",
+    value: "searchme",
+    children: [
+      {
+        label: "search me too",
+        value: "searchmetoo",
+        children: [
+          {
+            label: "No one can get me",
+            value: "anonymous",
+          },
+        ],
+      },
+    ],
+  };
+
+  const onChange = (currentNode, selectedNodes) => {
+    console.log("onChange::", currentNode, selectedNodes);
+  };
+  const onAction = (node, action) => {
+    console.log("onAction::", action, node);
+  };
+  const onNodeToggle = (currentNode) => {
+    console.log("onNodeToggle::", currentNode);
+  };
+
+  const TagHandle = (newValue, actionMeta) => {
+    console.group("Value Changed");
+    console.log(newValue);
+    console.log(`action: ${actionMeta.action}`);
+    console.groupEnd();
+  };
 
   async function submitHandler(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     // check required fields
     if (!name || name.length < 10) {
       setError(
-        'invalid input - collection name should be least 10 characters long'
-      )
+        "invalid input - collection name should be least 10 characters long"
+      );
     }
 
     // if ok then
     //    console.info('form submit handler here')
 
-    if (error == '') {
+    if (error == "") {
       const result = await onSubmit({
         id: id,
         name: name,
         description: description,
-      })
+      });
 
       // console.log('result form', result)
       // setStatusMsg(result.data.status_message)
@@ -40,7 +84,7 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
       // redirect to view
 
       if (result.status == 200) {
-        Router.push(`/member/collection/${result.data.id}`)
+        Router.push(`/member/collection/${result.data.id}`);
       }
     }
   }
@@ -49,40 +93,71 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
     <Container>
       <div>
         <form onSubmit={submitHandler}>
-          <div className='border w-full px-5 py-8 my-10  mx-auto rounded bg-gray-50'>
-            <div className='w-full text-center'>
-              <h2 className='text-2xl text-gray-700 my-3'>{formTitle}</h2>
-              <p className='text-gray-500 text-sm'>
+          <div className="w-full px-5 py-8 mx-auto my-10 border rounded bg-gray-50">
+            <div className="w-full text-center">
+              <h2 className="my-3 text-2xl text-gray-700">{formTitle}</h2>
+              <p className="text-sm text-gray-500">
                 Describe your collection details
               </p>
             </div>
-            <label className='block'>
-              <span className='text-gray-700'>Name</span>
-              <input
-                required
-                type='text'
-                value={name}
-                onChange={(event) => {
-                  setError('')
-                  setName(event.target.value)
-                }}
-                className='mt-1 block  rounded py-2 px-3 border-gray-300 border shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full'
-              />
-            </label>
-            <label className='block mt-5'>
-              <span className='text-gray-700'>Description</span>
-              <textarea
-                onChange={(event) => {
-                  setError('')
-                  setDescription(event.target.value)
-                }}
-                className='mt-1 block  rounded py-2 px-3 border-gray-300 border shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full'
-              >
-                {description}
-              </textarea>
-            </label>
-            <div className='flex items-center justify-center'>
-              <button className='bg-gray-700 text-white py-3 px-4 my-5 rounded hover:bg-gray-600  focus:bg-gray-800 focus:outline-none'>
+
+            <div className="flex flex-wrap w-full">
+              <div className="w-full p-5 md:w-1/2">
+                <label className="block">
+                  <span className="text-gray-700">Name</span>
+                  <input
+                    required
+                    type="text"
+                    value={name}
+                    onChange={(event) => {
+                      setError("");
+                      setName(event.target.value);
+                    }}
+                    className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </label>
+                <label className="block mt-5">
+                  <span className="text-gray-700">Description</span>
+                  <textarea
+                    onChange={(event) => {
+                      setError("");
+                      setDescription(event.target.value);
+                    }}
+                    className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  >
+                    {description}
+                  </textarea>
+                </label>
+              </div>
+              <div className="w-full p-5 md:w-1/2">
+                <label className="block">
+                  <span className="text-gray-700">Category</span>
+
+                  <DropdownTreeSelect
+                    mode="radioSelect"
+                    data={categoryData}
+                    onChange={onChange}
+                    onAction={onAction}
+                    onNodeToggle={onNodeToggle}
+                    className={styles.category}
+                  />
+                </label>
+
+                <label className="block mt-5">
+                  <span className="text-gray-700">Tags</span>
+
+                  <CreatableSelect
+                    isMulti
+                    onChange={TagHandle}
+                    options={tagOptions}
+                    className="py-1 m-0"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center">
+              <button className="px-4 py-3 my-5 text-white bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-800 focus:outline-none">
                 {submitButtonText}
               </button>
             </div>
@@ -91,13 +166,13 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
         <p>{statusMsg}</p>
       </div>
       {error && (
-        <div className='w-1/2 bg-gray-50 border rounded p-5 my-5 mx-auto text-red-700'>
-          <h3 className='text-red-700 text-lg font-semibold'>Error</h3>
+        <div className="w-1/2 p-5 mx-auto my-5 text-red-700 border rounded bg-gray-50">
+          <h3 className="text-lg font-semibold text-red-700">Error</h3>
           <p>{error}</p>
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default UserCollectionForm
+export default UserCollectionForm;
