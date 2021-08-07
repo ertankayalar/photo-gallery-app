@@ -1,4 +1,6 @@
 import React from "react";
+import { getAllPublishedTags } from "../../../../lib/mongodb/tags";
+import { buildCategoryTreeArray } from "../../../../lib/mongodb/category";
 import Layout from "../../../../components/layout/layout";
 import Container from "../../../../components/layout/container";
 import UserCollectionForm from "../../../../components/user/collection/form";
@@ -12,7 +14,8 @@ import Breadcrumb from "../../../../components/ui/breadcrumb";
  *
  */
 
-const EditCollection = ({ collection }) => {
+const EditCollection = ({ collection, categories, tags }) => {
+  console.log(`categories`, categories);
   const breadcrumbs = [
     { url: "/", name: "Home" },
     {
@@ -51,6 +54,8 @@ const EditCollection = ({ collection }) => {
       <Container>
         <UserCollectionForm
           collection={collection}
+          categories={categories}
+          tags={tags}
           onSubmit={editCollectionHandler}
         />
       </Container>
@@ -82,7 +87,17 @@ export async function getServerSideProps(context) {
     }
   );
 
-  // get collection data
+  // get categories
+  const categories = await buildCategoryTreeArray();
+  // get tags and convert to react select
+  const tagsList = await getAllPublishedTags();
+  const tags = tagsList.map((tag) => {
+    return {
+      label: tag.label,
+      value: tag.value.toString(),
+    };
+  });
+
   if (result.error) {
     console.log(`Error:`, result.error);
   }
@@ -90,6 +105,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       collection: result.data,
+      categories,
+      tags,
     },
   };
 }

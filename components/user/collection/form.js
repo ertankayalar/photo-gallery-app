@@ -6,7 +6,12 @@ import CreatableSelect from "react-select/creatable";
 import "react-dropdown-tree-select/dist/styles.css";
 import styles from "./form.module.css";
 
-const UserCollectionForm = ({ collection = null, onSubmit }) => {
+const UserCollectionForm = ({
+  collection = null,
+  categories,
+  tags,
+  onSubmit,
+}) => {
   const [id, setId] =
     collection != null ? useState(collection.id) : useState(null);
   const [name, setName] =
@@ -135,7 +140,7 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
 
                   <DropdownTreeSelect
                     mode="radioSelect"
-                    data={categoryData}
+                    data={categories}
                     onChange={onChange}
                     onAction={onAction}
                     onNodeToggle={onNodeToggle}
@@ -149,7 +154,7 @@ const UserCollectionForm = ({ collection = null, onSubmit }) => {
                   <CreatableSelect
                     isMulti
                     onChange={TagHandle}
-                    options={tagOptions}
+                    options={tags}
                     className="py-1 m-0"
                   />
                 </label>
