@@ -3,13 +3,15 @@ import Router from "next/router";
 import Container from "../../../components/layout/container";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 import CreatableSelect from "react-select/creatable";
-import "react-dropdown-tree-select/dist/styles.css";
+//import "react-dropdown-tree-select/dist/styles.css";
 import styles from "./form.module.css";
+import DropdownContainer from "../../ui/dropdown-container";
+import * as utils from "../../../lib/utils";
 
 const UserCollectionForm = ({
   collection = null,
-  categories,
-  tags,
+  categoryOptions,
+  tagOptions,
   onSubmit,
 }) => {
   const [id, setId] =
@@ -18,36 +20,44 @@ const UserCollectionForm = ({
     collection != null ? useState(collection.name) : useState("");
   const [description, setDescription] =
     collection != null ? useState(collection.description) : useState("");
+  const [category, setCategory] =
+    collection != null ? useState(collection.category) : useState("");
+  const [tags, setTags] =
+    collection != null ? useState(collection.tags) : useState([]);
+  const [newTags, setNewTags] = useState([]);
   const [error, setError] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
   const formTitle = collection == null ? "New Collection" : "Update Collection";
   const submitButtonText = collection == null ? "Add" : "Update";
 
-  const tagOptions = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+  const getTagItems = (tagValues) => {
+    const newItems = tagValues.filter((tag) => {
+      return tag?.__isNew__;
+    });
 
-  const categoryData = {
-    label: "search me",
-    value: "searchme",
-    children: [
-      {
-        label: "search me too",
-        value: "searchmetoo",
-        children: [
-          {
-            label: "No one can get me",
-            value: "anonymous",
-          },
-        ],
-      },
-    ],
+    const selectedItems = (tags) => {
+      const items = tags.filter((tag) => {
+        return !tag?.__isNew__;
+      });
+
+      return items.map((tag) => {
+        return tag.value;
+      });
+    };
+
+    return {
+      new: newItems,
+      selected: selectedItems(tagValues),
+    };
   };
 
   const onChange = (currentNode, selectedNodes) => {
+    console.group("Treeview Value Changed");
     console.log("onChange::", currentNode, selectedNodes);
+    console.log("selected value:", currentNode.value);
+    setCategory(currentNode.value);
+
+    console.groupEnd();
   };
   const onAction = (node, action) => {
     console.log("onAction::", action, node);
@@ -60,6 +70,16 @@ const UserCollectionForm = ({
     console.group("Value Changed");
     console.log(newValue);
     console.log(`action: ${actionMeta.action}`);
+    if ((actionMeta.action = "select-option")) {
+      const tagItems = getTagItems(newValue);
+      console.log("tagItems", tagItems);
+
+      // add New Tag Values
+      //{label: "dene", value: "dene", __isNew__: true}
+
+      setTags(tagItems.selected);
+      setNewTags(tagItems.new);
+    }
     console.groupEnd();
   };
 
@@ -77,20 +97,25 @@ const UserCollectionForm = ({
     //    console.info('form submit handler here')
 
     if (error == "") {
+      console.group("collection form submit");
       const result = await onSubmit({
         id: id,
         name: name,
         description: description,
+        category: category,
+        tags: tags,
+        newTags,
       });
 
       // console.log('result form', result)
       // setStatusMsg(result.data.status_message)
 
       // redirect to view
-
+      console.log("result:", result);
       if (result.status == 200) {
         Router.push(`/member/collection/${result.data.id}`);
       }
+      console.groupEnd();
     }
   }
 
@@ -138,9 +163,9 @@ const UserCollectionForm = ({
                 <label className="block">
                   <span className="text-gray-700">Category</span>
 
-                  <DropdownTreeSelect
+                  <DropdownContainer
                     mode="radioSelect"
-                    data={categories}
+                    data={categoryOptions}
                     onChange={onChange}
                     onAction={onAction}
                     onNodeToggle={onNodeToggle}
@@ -154,8 +179,9 @@ const UserCollectionForm = ({
                   <CreatableSelect
                     isMulti
                     onChange={TagHandle}
-                    options={tags}
+                    options={tagOptions}
                     className="py-1 m-0"
+                    defaultValue={tags}
                   />
                 </label>
               </div>

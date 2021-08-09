@@ -31,7 +31,7 @@ function CollectionView({ collection, api_url, session }) {
   const [userPhotos, setUserPhotos] = useState(collection.photos);
   const [editPhoto, setEditPhoto] = useState(null);
   const [percent, setPercent] = useState(0);
-  const { id, name, description } = collection;
+  const { id, name, description, category, tags } = collection;
   const [isPhotoModalOpen, setPhotoModalOpen] = useState(false);
   const [isConfirmBoxOpen, setConfirmBoxOpen] = useState(false);
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
@@ -410,7 +410,7 @@ function CollectionView({ collection, api_url, session }) {
         <Breadcrumb breadcrumbs={breadcrumbs} />
       </Container>
       <Container>
-        <div className="w-full pb-10 my-10 text-center border rounded bg-gray-50">
+        <div className="w-full pb-10 my-10 border rounded bg-gray-50">
           <div className="flex justify-end w-full px-2 py-2 text-sm">
             <Link href={`/member/collection/edit/${id}`}>
               <a className="flex items-center px-2 py-2 text-gray-600 bg-gray-100 border rounded hover:bg-gray-200 hover:text-gray-800">
@@ -441,8 +441,24 @@ function CollectionView({ collection, api_url, session }) {
             )}
           </div>
 
-          <h2 className="my-3 text-2xl text-gray-700">{name}</h2>
-          <p className="text-sm text-gray-500">{description}</p>
+          <div className="flex flex-wrap w-full">
+            <div className="w-1/2 text-center">
+              <h2 className="my-3 text-2xl text-gray-700">{name}</h2>
+              <p className="text-sm text-gray-500">{description}</p>
+            </div>
+            <div className="w-1/2">
+              <p className="my-3 text-lg">{category.name}</p>
+              <div className="my-3">
+                {tags?.map((tag) => (
+                  <Link href={`/tag/${tag.slug}`} key={tag.slug}>
+                    <a className="px-2 py-1 mr-3 text-sm bg-white border rounded-sm shadow-sm hover:bg-gray-100">
+                      {tag.name}
+                    </a>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Container>
       <Container className="flex items-center justify-center w-full ">

@@ -54,8 +54,8 @@ const EditCollection = ({ collection, categories, tags }) => {
       <Container>
         <UserCollectionForm
           collection={collection}
-          categories={categories}
-          tags={tags}
+          categoryOptions={categories}
+          tagOptions={tags}
           onSubmit={editCollectionHandler}
         />
       </Container>
@@ -88,7 +88,7 @@ export async function getServerSideProps(context) {
   );
 
   // get categories
-  const categories = await buildCategoryTreeArray();
+  const categories = await buildCategoryTreeArray(result.data.category);
   // get tags and convert to react select
   const tagsList = await getAllPublishedTags();
   const tags = tagsList.map((tag) => {
@@ -102,9 +102,25 @@ export async function getServerSideProps(context) {
     console.log(`Error:`, result.error);
   }
 
+  const setTagIds = (tagValues) => {
+    return tagValues.map((tag) => {
+      return {
+        value: tag._id,
+        label: tag.name,
+      };
+    });
+  };
+
+  const collection = {
+    ...result.data,
+    tags: setTagIds(result.data.tags),
+  };
+
+  console.log("collection", collection);
+
   return {
     props: {
-      collection: result.data,
+      collection,
       categories,
       tags,
     },

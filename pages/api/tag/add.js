@@ -1,6 +1,7 @@
-// Update User Collection
+// Add User Tag
 import { getSession } from "next-auth/client";
 import axios from "axios";
+import slugify from "slugify";
 
 async function handler(req, res) {
   if (req.method !== "POST") {
@@ -15,16 +16,11 @@ async function handler(req, res) {
     return;
   }
 
-  // add new tags  first
-
-  const result = await axios.put(
-    `${process.env.API_URL}/collections/${req.body.id}`,
+  const result = await axios.post(
+    `${process.env.API_URL}/tags`,
     {
       name: req.body.name,
-      description: req.body.description,
-      category: req.body.category,
-      tags: req.body.tags,
-      user: session.user.id, // add yaparken lazım, burda chheck yapcccez
+      slug: slugify(req.body.name, { lower: true, strict: true }),
     },
     {
       headers: {
@@ -34,9 +30,7 @@ async function handler(req, res) {
   );
 
   if (result.status == 200) {
-    res
-      .status(200)
-      .json({ status_message: "Collection updated", ...result.data });
+    res.status(200).json({ status_message: "Tags added", ...result.data });
   } else {
     res.status(result.status).json({ message: result.error });
   }
