@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import Router from "next/router";
 import Container from "../../../components/layout/container";
-import DropdownTreeSelect from "react-dropdown-tree-select";
 import CreatableSelect from "react-select/creatable";
-//import "react-dropdown-tree-select/dist/styles.css";
 import styles from "./form.module.css";
 import DropdownContainer from "../../ui/dropdown-container";
 import * as utils from "../../../lib/utils";
+import { addNewTags } from "../../../lib/api/collection";
+import { buildTagOptions, splitTagItems } from "../../../lib/tag-utils";
+import axios from "axios";
 
 const UserCollectionForm = ({
   collection = null,
@@ -23,33 +24,14 @@ const UserCollectionForm = ({
   const [category, setCategory] =
     collection != null ? useState(collection.category) : useState("");
   const [tags, setTags] =
-    collection != null ? useState(collection.tags) : useState([]);
-  const [newTags, setNewTags] = useState([]);
+    collection != null
+      ? useState(buildTagOptions(collection.tags))
+      : useState([]);
+  // const [newTags, setNewTags] = useState([]);
   const [error, setError] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
   const formTitle = collection == null ? "New Collection" : "Update Collection";
   const submitButtonText = collection == null ? "Add" : "Update";
-
-  const getTagItems = (tagValues) => {
-    const newItems = tagValues.filter((tag) => {
-      return tag?.__isNew__;
-    });
-
-    const selectedItems = (tags) => {
-      const items = tags.filter((tag) => {
-        return !tag?.__isNew__;
-      });
-
-      return items.map((tag) => {
-        return tag.value;
-      });
-    };
-
-    return {
-      new: newItems,
-      selected: selectedItems(tagValues),
-    };
-  };
 
   const onChange = (currentNode, selectedNodes) => {
     console.group("Treeview Value Changed");
@@ -71,17 +53,37 @@ const UserCollectionForm = ({
     console.log(newValue);
     console.log(`action: ${actionMeta.action}`);
     if ((actionMeta.action = "select-option")) {
-      const tagItems = getTagItems(newValue);
-      console.log("tagItems", tagItems);
-
-      // add New Tag Values
-      //{label: "dene", value: "dene", __isNew__: true}
-
-      setTags(tagItems.selected);
-      setNewTags(tagItems.new);
+      setTags(newValue);
+      utils.showData("posted Tags (newValue) ", newValue);
     }
     console.groupEnd();
   };
+
+  // async function addNewTags(tags) {
+  //   const postedTags = splitTagItems(tags);
+  //   utils.showData(postedTags);
+  //   let savePostItems = postedTags.selected;
+
+  //   // if new tags:
+  //   if (postedTags.new.length) {
+  //     postedTags.new.forEach(async (newTag) => {
+  //       const newTagResult = await axios.post("/api/tag/add", newTag, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //       if (newTagResult.status == 200) {
+  //         utils.showData("newTagResult.data", newTagResult.data);
+  //         savePostItems.push(newTagResult.data._id.toString());
+  //       } else {
+  //         newTagResult.status(result.status).json({ message: result.error });
+  //       }
+  //     });
+  //   }
+
+  //   utils.showData("savePostItems", savePostItems);
+  //   return savePostItems;
+  // }
 
   async function submitHandler(event) {
     event.preventDefault();
@@ -93,28 +95,56 @@ const UserCollectionForm = ({
       );
     }
 
-    // if ok then
-    //    console.info('form submit handler here')
-
     if (error == "") {
-      console.group("collection form submit");
-      const result = await onSubmit({
-        id: id,
-        name: name,
-        description: description,
-        category: category,
-        tags: tags,
-        newTags,
-      });
+      console.group("Collection Form Submit Start");
 
-      // console.log('result form', result)
-      // setStatusMsg(result.data.status_message)
+      // tags
+      const postedTags = splitTagItems(tags);
+      let savePostItems = postedTags.selected;
 
-      // redirect to view
-      console.log("result:", result);
-      if (result.status == 200) {
-        Router.push(`/member/collection/${result.data.id}`);
+      utils.showData("Current Tags:", savePostItems);
+
+      if (postedTags.new.length > 0) {
+        await addNewTags(postedTags).then((saveTagIds) =>
+          onSubmit({
+            id: id,
+            name: name,
+            description: description,
+            category: category,
+            tags: saveTagIds,
+          }).then((result) => {
+            utils.showData("saveTagIds retuernhed", saveTagIds);
+            utils.showData("Collection Form Result with New Tags", result);
+
+            if (result.status == 200) {
+              Router.push(`/member/collection/${result.data.id}`);
+            }
+          })
+        );
+        // utils.showData("newTagIds :", newTagIds);
+        // if (newTagIds.length) {
+        //   //savePostItems = newTagIds.concat(postedTags.selected);
+        // }
+        // savePostItems = postedTags.selected.concat(newTagIds);
+      } else {
+        const result = await onSubmit({
+          id: id,
+          name: name,
+          description: description,
+          category: category,
+          tags: savePostItems,
+        });
+
+        // redirect to view
+
+        utils.showData("Collection Form Result", result);
+        if (result.status == 200) {
+          Router.push(`/member/collection/${result.data.id}`);
+        }
       }
+
+      //utils.showData("new and current Tags:", savePostItems);
+
       console.groupEnd();
     }
   }

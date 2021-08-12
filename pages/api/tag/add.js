@@ -8,6 +8,8 @@ async function handler(req, res) {
     return;
   }
 
+  console.log("req.body", req.body);
+
   // is authenticated
   const session = await getSession({ req: req });
 
@@ -19,8 +21,8 @@ async function handler(req, res) {
   const result = await axios.post(
     `${process.env.API_URL}/tags`,
     {
-      name: req.body.name,
-      slug: slugify(req.body.name, { lower: true, strict: true }),
+      name: req.body.label,
+      slug: slugify(req.body.label, { lower: true, strict: true }),
     },
     {
       headers: {
@@ -31,6 +33,7 @@ async function handler(req, res) {
 
   if (result.status == 200) {
     res.status(200).json({ status_message: "Tags added", ...result.data });
+    console.log("result.data of enw tag", result.data);
   } else {
     res.status(result.status).json({ message: result.error });
   }

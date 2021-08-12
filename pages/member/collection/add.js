@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
+import * as utils from "../../../lib/utils";
 import axios from "axios";
 import { getSession } from "next-auth/client";
 import { getAllPublishedTags } from "../../../lib/mongodb/tags";
 import { buildCategoryTreeArray } from "../../../lib/mongodb/category";
+import { buildTagOptions } from "../../../lib/tag-utils";
 import Layout from "../../../components/layout/layout";
 import Container from "../../../components/layout/container";
 import UserCollectionForm from "../../../components/user/collection/form";
 import Breadcrumb from "../../../components/ui/breadcrumb";
 
-const AddCollection = ({ session, api_url, categories, tags }) => {
+const AddCollection = ({ session, api_url, categoryOptions, tagOptions }) => {
+  utils.showData(`categoryOptions:`, categoryOptions);
+  utils.showData(`tagOptions`, tagOptions);
+
   const breadcrumbs = [
     { url: "/", name: "Home" },
     {
@@ -37,8 +42,8 @@ const AddCollection = ({ session, api_url, categories, tags }) => {
       <Container>
         <UserCollectionForm
           onSubmit={addCollectionHandler}
-          categoryOptions={categories}
-          tagOptions={tags}
+          categoryOptions={categoryOptions}
+          tagOptions={tagOptions}
         />
       </Container>
     </Layout>
@@ -57,18 +62,18 @@ export async function getServerSideProps(context) {
   }
 
   // get categories
-  const categories = await buildCategoryTreeArray();
+  const categoryOptions = await buildCategoryTreeArray();
   // get tags and convert to react select
-  const tagsList = await getAllPublishedTags();
-  const tags = tagsList.map((tag) => {
-    return {
-      label: tag.label,
-      value: tag.value.toString(),
-    };
-  });
+  const publishedTags = await getAllPublishedTags();
+  const tagOptions = buildTagOptions(publishedTags);
 
   return {
-    props: { session, api_url: process.env.API_URL, categories, tags },
+    props: {
+      session,
+      api_url: process.env.API_URL,
+      categoryOptions,
+      tagOptions,
+    },
   };
 }
 

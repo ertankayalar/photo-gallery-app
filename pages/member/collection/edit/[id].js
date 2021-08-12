@@ -1,5 +1,7 @@
 import React from "react";
+import * as utils from "../../../../lib/utils";
 import { getAllPublishedTags } from "../../../../lib/mongodb/tags";
+import { buildTagOptions } from "../../../../lib/tag-utils";
 import { buildCategoryTreeArray } from "../../../../lib/mongodb/category";
 import Layout from "../../../../components/layout/layout";
 import Container from "../../../../components/layout/container";
@@ -14,8 +16,10 @@ import Breadcrumb from "../../../../components/ui/breadcrumb";
  *
  */
 
-const EditCollection = ({ collection, categories, tags }) => {
-  console.log(`categories`, categories);
+const EditCollection = ({ collection, categoryOptions, tagOptions }) => {
+  utils.showData(`categoryOptions:`, categoryOptions);
+  utils.showData(`tagOptions`, tagOptions);
+
   const breadcrumbs = [
     { url: "/", name: "Home" },
     {
@@ -54,8 +58,8 @@ const EditCollection = ({ collection, categories, tags }) => {
       <Container>
         <UserCollectionForm
           collection={collection}
-          categoryOptions={categories}
-          tagOptions={tags}
+          categoryOptions={categoryOptions}
+          tagOptions={tagOptions}
           onSubmit={editCollectionHandler}
         />
       </Container>
@@ -88,41 +92,35 @@ export async function getServerSideProps(context) {
   );
 
   // get categories
-  const categories = await buildCategoryTreeArray(result.data.category);
+  const categoryOptions = await buildCategoryTreeArray(result.data.category);
   // get tags and convert to react select
-  const tagsList = await getAllPublishedTags();
-  const tags = tagsList.map((tag) => {
-    return {
-      label: tag.label,
-      value: tag.value.toString(),
-    };
-  });
+  const publishedTags = await getAllPublishedTags();
+  const tagOptions = buildTagOptions(publishedTags);
 
-  if (result.error) {
-    console.log(`Error:`, result.error);
-  }
+  utils.showData("publishedTags:", publishedTags);
+  utils.showData("tagOptions:", tagOptions);
 
-  const setTagIds = (tagValues) => {
-    return tagValues.map((tag) => {
-      return {
-        value: tag._id,
-        label: tag.name,
-      };
-    });
-  };
+  // const tags = tagsList.map((tag) => {
+  //   return {
+  //     label: tag.label,
+  //     value: tag.value.toString(),
+  //   };
+  // });
+
+  utils.showError(result);
 
   const collection = {
     ...result.data,
-    tags: setTagIds(result.data.tags),
+    // tags: setTagIds(result.data.tags),
   };
 
-  console.log("collection", collection);
+  utils.showData("collection:", collection);
 
   return {
     props: {
       collection,
-      categories,
-      tags,
+      categoryOptions,
+      tagOptions,
     },
   };
 }

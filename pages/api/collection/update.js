@@ -15,8 +15,12 @@ async function handler(req, res) {
     return;
   }
 
-  // add new tags  first
+  // split tags selected and new
+  // const postedTags = splitTagItems(req.body.tags);
+  // let tags = postedTags.selected;
+  // add new tags
 
+  // add post
   const result = await axios.put(
     `${process.env.API_URL}/collections/${req.body.id}`,
     {
