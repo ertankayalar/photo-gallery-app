@@ -1,11 +1,13 @@
 // Update User Collection
 import { getSession } from "next-auth/client";
 import axios from "axios";
+import { buildTags } from "../../../lib/api/tag";
 
 async function handler(req, res) {
   if (req.method !== "POST") {
     return;
   }
+  console.clear();
 
   // is authenticated
   const session = await getSession({ req: req });
@@ -15,19 +17,20 @@ async function handler(req, res) {
     return;
   }
 
-  // split tags selected and new
-  // const postedTags = splitTagItems(req.body.tags);
-  // let tags = postedTags.selected;
-  // add new tags
-
   // add post
+  console.log("Update to STRAPI: req.body.tags", req.body.tags);
+
+  const tagData = await buildTags(req.body.tags);
+
+  console.log("Update to STRAPI: tagData", tagData);
+
   const result = await axios.put(
     `${process.env.API_URL}/collections/${req.body.id}`,
     {
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
-      tags: req.body.tags,
+      tags: tagData,
       user: session.user.id, // add yaparken lazım, burda chheck yapcccez
     },
     {
@@ -36,7 +39,9 @@ async function handler(req, res) {
       },
     }
   );
+  console.log("JWT", session.jwt);
 
+  // console.log("result", result);
   if (result.status == 200) {
     res
       .status(200)

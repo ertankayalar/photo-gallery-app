@@ -5,7 +5,7 @@ import CreatableSelect from "react-select/creatable";
 import styles from "./form.module.css";
 import DropdownContainer from "../../ui/dropdown-container";
 import * as utils from "../../../lib/utils";
-import { addNewTags } from "../../../lib/api/collection";
+import { buildTagsForPost } from "../../../lib/api/collection";
 import { buildTagOptions, splitTagItems } from "../../../lib/tag-utils";
 import axios from "axios";
 
@@ -59,32 +59,6 @@ const UserCollectionForm = ({
     console.groupEnd();
   };
 
-  // async function addNewTags(tags) {
-  //   const postedTags = splitTagItems(tags);
-  //   utils.showData(postedTags);
-  //   let savePostItems = postedTags.selected;
-
-  //   // if new tags:
-  //   if (postedTags.new.length) {
-  //     postedTags.new.forEach(async (newTag) => {
-  //       const newTagResult = await axios.post("/api/tag/add", newTag, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       if (newTagResult.status == 200) {
-  //         utils.showData("newTagResult.data", newTagResult.data);
-  //         savePostItems.push(newTagResult.data._id.toString());
-  //       } else {
-  //         newTagResult.status(result.status).json({ message: result.error });
-  //       }
-  //     });
-  //   }
-
-  //   utils.showData("savePostItems", savePostItems);
-  //   return savePostItems;
-  // }
-
   async function submitHandler(event) {
     event.preventDefault();
 
@@ -97,56 +71,35 @@ const UserCollectionForm = ({
 
     if (error == "") {
       console.group("Collection Form Submit Start");
+      // const data = {
+      //   id: id,
+      //   name: name,
+      //   description: description,
+      //   category: category,
+      //   tags: tags,
+      // };
 
-      // tags
-      const postedTags = splitTagItems(tags);
-      let savePostItems = postedTags.selected;
+      const result = await onSubmit({
+        id: id,
+        name: name,
+        description: description,
+        category: category,
+        tags: tags,
+      });
 
-      utils.showData("Current Tags:", savePostItems);
+      // const result = await axios.post("/api/collection/update", data, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
 
-      if (postedTags.new.length > 0) {
-        await addNewTags(postedTags).then((saveTagIds) =>
-          onSubmit({
-            id: id,
-            name: name,
-            description: description,
-            category: category,
-            tags: saveTagIds,
-          }).then((result) => {
-            utils.showData("saveTagIds retuernhed", saveTagIds);
-            utils.showData("Collection Form Result with New Tags", result);
-
-            if (result.status == 200) {
-              Router.push(`/member/collection/${result.data.id}`);
-            }
-          })
-        );
-        // utils.showData("newTagIds :", newTagIds);
-        // if (newTagIds.length) {
-        //   //savePostItems = newTagIds.concat(postedTags.selected);
-        // }
-        // savePostItems = postedTags.selected.concat(newTagIds);
-      } else {
-        const result = await onSubmit({
-          id: id,
-          name: name,
-          description: description,
-          category: category,
-          tags: savePostItems,
-        });
-
-        // redirect to view
-
-        utils.showData("Collection Form Result", result);
-        if (result.status == 200) {
-          Router.push(`/member/collection/${result.data.id}`);
-        }
+      // redirect to view
+      utils.showData("Collection Form Result", result);
+      if (result.status == 200) {
+        Router.push(`/member/collection/${result.data.id}`);
       }
-
-      //utils.showData("new and current Tags:", savePostItems);
-
-      console.groupEnd();
     }
+    console.groupEnd();
   }
 
   return (

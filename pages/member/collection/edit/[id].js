@@ -8,7 +8,6 @@ import Container from "../../../../components/layout/container";
 import UserCollectionForm from "../../../../components/user/collection/form";
 import { useSession, getSession } from "next-auth/client";
 import axios from "axios";
-import Router from "next/router";
 import Breadcrumb from "../../../../components/ui/breadcrumb";
 
 /**
@@ -17,9 +16,6 @@ import Breadcrumb from "../../../../components/ui/breadcrumb";
  */
 
 const EditCollection = ({ collection, categoryOptions, tagOptions }) => {
-  utils.showData(`categoryOptions:`, categoryOptions);
-  utils.showData(`tagOptions`, tagOptions);
-
   const breadcrumbs = [
     { url: "/", name: "Home" },
     {
@@ -34,9 +30,6 @@ const EditCollection = ({ collection, categoryOptions, tagOptions }) => {
   ];
 
   async function editCollectionHandler(data) {
-    // sent data collection to api/collection/update
-    // const result = await axios.post('/api/collection/edit', { })
-
     const result = await axios.post("/api/collection/update", data, {
       headers: {
         "Content-Type": "application/json",

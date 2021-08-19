@@ -83,17 +83,6 @@ function CollectionView({ collection, api_url, session }) {
   async function onDeleteCollection() {
     console.log(`userCollection.id delete`, userCollection.id);
     setConfirmBoxOpen(false);
-    // api/user/collection
-
-    // delete all userPhotos
-    // let res
-    // userPhotos.forEach((up) => {
-    //   res = await axios.delete(`/api/user/photo/delete/${up.id}`, {
-    //     params: {
-    //       id: up.id,
-    //     },
-    //   })
-    // })
 
     // delete userCollection
 
@@ -285,107 +274,6 @@ function CollectionView({ collection, api_url, session }) {
       console.log("Exception Error", error);
     }
   }
-
-  // /**
-  //  * updatePhotoHandler
-  //  * @param {object} photoData
-  //  */
-  // async function updatePhotoHandler(photoData) {
-  //   // /api/user/photo/update, data
-  //   console.log('update photo handler')
-  //   console.log('photoData', photoData)
-
-  //   // task: delete old photo
-
-  //   // upload photo
-  //   if (photoData.photoFiles != null) {
-  //     let uploadedFiles = []
-  //     let uploadSuccess = false
-  //     const data = new FormData()
-
-  //     data.append('files', photoData.photoFiles[0])
-
-  //     try {
-  //       const uploadRes = await axios.post(`${api_url}/upload`, data, {
-  //         onUploadProgress: (progress) =>
-  //           setPercent(calcPercent(progress.loaded, progress.total)),
-  //         headers: {
-  //           Authorization: `Bearer ${session.jwt}`,
-  //         },
-  //       })
-  //       // buraya kadar completed dememesi gerekiyor
-  //       console.log('Upload Result =>', uploadRes)
-  //       if (uploadRes.status == 200) {
-  //         console.log('upload success')
-  //         uploadedFiles = uploadRes.data
-  //         setIsUploadSuccess(true)
-  //       }
-  //     } catch (err) {
-  //       console.log('Exception Error', err)
-  //     }
-  //   }
-
-  //   // update photo db
-  //   let editPhoto = {}
-  //   if (isUploadSuccess) {
-  //     editPhoto = {
-  //       id: photoData.id,
-  //       caption: photoData.caption,
-  //       description: photoData.description,
-  //       photo: uploadedFiles[0].id,
-  //       collection_id: collection._id,
-  //     }
-  //   } else {
-  //     editPhoto = {
-  //       id: photoData.id,
-  //       caption: photoData.caption,
-  //       description: photoData.description,
-  //       collection_id: collection._id,
-  //     }
-  //   }
-
-  //   // update db
-  //   //
-  //   // const result = await axios.post('/api/photos/update', editPhoto, {
-  //   //   headers: {
-  //   //     'Content-Type': 'application/json',
-  //   //   },
-  //   // })
-
-  //   const add = await fetch(`${api_url}/photos/${editPhoto.id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       Authorization: `Bearer ${session.jwt}`,
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(editPhoto),
-  //   })
-  //   const editResponse = await add.json()
-  //   console.log(`editResponse`, editResponse)
-
-  //   // if (uploadSuccess) {
-  //   //   // find current  photo remove, add new editphoto
-  //   //   // const deletedPhoto = userPhotos.findIndex(
-  //   //   //   (photo) => photo.id === photoData.id
-  //   //   // )
-
-  //   //   // setUserPhotos(userPhotos.filter((photo) => photo.id !== photoData.id))
-  //   //   // console.log(`userPhotos (deleted)`, userPhotos)
-  //   //   // setUserPhotos([...userPhotos, editResponse])
-  //   //   // console.log(`userPhotos (edited)`, userPhotos)
-
-  //   //   // delete
-  //   //   const deletedPhoto = userPhotos.findIndex(
-  //   //     (photo) => photo.id === photoData.id
-  //   //   )
-  //   //   console.log('deletedPhoto', deletedPhoto)
-  //   //   setUserPhotos(userPhotos.filter((photo) => photo.id !== photoData.id))
-  //   //   console.log(`deleted userPhotos (...)`, userPhotos)
-  //   //   setUserPhotos([...userPhotos, editResponse])
-  //   //   console.log(`edited userPhotos (...)`, userPhotos)
-  //   // }
-  // }
 
   async function deletePhotoHandler(id) {
     const response = await axios.delete(`/api/user/photo/delete/${id}`, {

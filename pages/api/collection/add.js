@@ -2,8 +2,8 @@
 import { getSession } from "next-auth/client";
 import axios from "axios";
 import slugify from "slugify";
-import { splitTagItems } from "../../../lib/tag-utils";
 import * as utils from "../../../lib/utils";
+import { buildTags } from "../../../lib/api/tag";
 
 /**
  * Add User Collection
@@ -11,10 +11,6 @@ import * as utils from "../../../lib/utils";
  * @param {*} res
  * @returns
  */
-
-// don't add id field
-// add user  id
-
 async function handler(req, res) {
   if (req.method !== "POST") {
     return;
@@ -28,23 +24,7 @@ async function handler(req, res) {
     return;
   }
 
-  // split tags selected and new
-  // const postedTags = splitTagItems(req.body.tags);
-  // let tags = postedTags.selected;
-  // add new tags
-  // if (postedTags.new.length) {
-  //   postedTags.new.forEach(async (newTag) => {
-  //     const newTagResult = await axios.post(`/api/tag/add`, {
-  //       name: newTag.name,
-  //     });
-  //     if (newTagResult.status == 200) {
-  //       utils.showData("newTagResult.data", newTagResult.data);
-  //       tags.push(newTagResult.data._id);
-  //     } else {
-  //       newTagResult.status(result.status).json({ message: result.error });
-  //     }
-  //   });
-  // }
+  const tagData = await buildTags(req.body.tags);
 
   const result = await axios.post(
     `${process.env.API_URL}/collections`,
@@ -52,7 +32,7 @@ async function handler(req, res) {
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
-      tags: req.body.tags,
+      tags: tagData,
       slug: slugify(req.body.name, { lower: true, strict: true }),
       user: session.user.id,
     },

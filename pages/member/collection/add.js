@@ -24,7 +24,6 @@ const AddCollection = ({ session, api_url, categoryOptions, tagOptions }) => {
   ];
 
   async function addCollectionHandler(data) {
-    console.log(`data`, data);
     const result = await axios.post("/api/collection/add", data, {
       headers: {
         "Content-Type": "application/json",
