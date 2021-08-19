@@ -71,13 +71,6 @@ const UserCollectionForm = ({
 
     if (error == "") {
       console.group("Collection Form Submit Start");
-      // const data = {
-      //   id: id,
-      //   name: name,
-      //   description: description,
-      //   category: category,
-      //   tags: tags,
-      // };
 
       const result = await onSubmit({
         id: id,
@@ -86,12 +79,6 @@ const UserCollectionForm = ({
         category: category,
         tags: tags,
       });
-
-      // const result = await axios.post("/api/collection/update", data, {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
 
       // redirect to view
       utils.showData("Collection Form Result", result);

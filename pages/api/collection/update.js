@@ -31,7 +31,7 @@ async function handler(req, res) {
       description: req.body.description,
       category: req.body.category,
       tags: tagData,
-      user: session.user.id, // add yaparken lazım, burda chheck yapcccez
+      user: session.user.id,
     },
     {
       headers: {

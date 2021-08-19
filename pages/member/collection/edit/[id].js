@@ -37,10 +37,6 @@ const EditCollection = ({ collection, categoryOptions, tagOptions }) => {
     });
 
     return result;
-
-    // if (result.status == 200) {
-    //   Router.push(`/member/collection/${result.data.data.id}`)
-    // }
   }
 
   return (
@@ -90,24 +86,11 @@ export async function getServerSideProps(context) {
   const publishedTags = await getAllPublishedTags();
   const tagOptions = buildTagOptions(publishedTags);
 
-  utils.showData("publishedTags:", publishedTags);
-  utils.showData("tagOptions:", tagOptions);
-
-  // const tags = tagsList.map((tag) => {
-  //   return {
-  //     label: tag.label,
-  //     value: tag.value.toString(),
-  //   };
-  // });
-
-  utils.showError(result);
-
   const collection = {
     ...result.data,
-    // tags: setTagIds(result.data.tags),
   };
 
-  utils.showData("collection:", collection);
+  // utils.showData("collection:", collection);
 
   return {
     props: {
