@@ -39,7 +39,7 @@ async function handler(req, res) {
       },
     }
   );
-  console.log("JWT", session.jwt);
+  //console.log("JWT", session.jwt);
 
   // console.log("result", result);
   if (result.status == 200) {
