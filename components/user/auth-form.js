@@ -1,8 +1,8 @@
-import React from 'react'
-import { useState, useRef } from 'react'
-import { useRouter } from 'next/router'
-import { signIn } from 'next-auth/client'
-import axios from 'axios'
+import React from "react";
+import { useState, useRef } from "react";
+import { useRouter } from "next/router";
+import { signIn } from "next-auth/client";
+import axios from "axios";
 
 async function createUser(email, password, subscribe) {
   // const response = await fetch('/api/auth/signup', {
@@ -15,56 +15,75 @@ async function createUser(email, password, subscribe) {
 
   // const data = await response.json()
 
-  const response = await axios.post('/api/auth/signup', {
-    email,
-    password,
-    subscribe,
-  })
+  const response = await axios
+    .post("/api/auth/signup", {
+      email,
+      password,
+      subscribe,
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+      console.log(error.config);
+    });
 
-  console.log('response', response)
+  console.log("response", response);
 
   if (response.status != 201) {
-    throw new Error(response.message || 'Something went wrong!')
+    throw new Error(response.message || "Something went wrong!");
   }
-  return response.data
+  return response.data;
 }
 
 const AuthForm = () => {
-  const [loginError, setError] = useState('')
-  const [message, setMessage] = useState('')
-  const emailInputRef = useRef()
-  const passwordInputRef = useRef()
-  const subscribeInputRef = useRef()
-  const [isLogin, setIsLogin] = useState(true)
+  const [loginError, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+  const subscribeInputRef = useRef();
+  const [isLogin, setIsLogin] = useState(true);
 
-  const router = useRouter()
+  const router = useRouter();
   function switchAuthModeHandler() {
-    setIsLogin((prevState) => !prevState)
+    setIsLogin((prevState) => !prevState);
   }
 
   async function submitHandler(event) {
-    event.preventDefault()
-    const enteredEmail = emailInputRef.current.value
-    const enteredPassword = passwordInputRef.current.value
+    event.preventDefault();
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
 
     const enteredSubscribe = !isLogin
       ? subscribeInputRef.current.checked
-      : false
+      : false;
 
-    console.log(`Submit handler`)
+    console.log(`Submit handler`);
 
     // optional: add validation
 
     if (isLogin) {
-      const response = await signIn('credentials', {
+      const response = await signIn("credentials", {
         redirect: false,
         username: enteredEmail,
         password: enteredPassword,
-      })
-      console.log(`response`, response)
+      });
+      console.log(`response`, response);
 
       if (!response.error) {
-        router.replace('/member/collections')
+        router.replace("/member/collections");
       }
     } else {
       try {
@@ -72,14 +91,14 @@ const AuthForm = () => {
           enteredEmail,
           enteredPassword,
           enteredSubscribe
-        )
-        console.log(result)
+        );
+        console.log(result);
         if (result.id) {
-          setMessage(result.message)
-          switchAuthModeHandler()
+          setMessage(result.message);
+          switchAuthModeHandler();
         }
       } catch (error) {
-        console.log('Error', error)
+        console.log("Error", error);
       }
     }
 
@@ -91,43 +110,43 @@ const AuthForm = () => {
     // }
   }
   return (
-    <div className='flex min-h-screen bg-white dark:bg-gray-900'>
-      <div className='container mx-auto'>
-        <div className='max-w-md mx-auto my-10'>
-          <div className='text-center'>
-            <h1 className='my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200'>
-              {isLogin ? 'Login' : 'Create Account'}
+    <div className="flex min-h-screen bg-white dark:bg-gray-900">
+      <div className="container mx-auto">
+        <div className="max-w-md mx-auto my-10">
+          <div className="text-center">
+            <h1 className="my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200">
+              {isLogin ? "Login" : "Create Account"}
             </h1>
-            <p className='text-gray-500 dark:text-gray-400'>
+            <p className="text-gray-500 dark:text-gray-400">
               {isLogin
-                ? 'Sign in to access your account'
-                : 'Create an account for upload your collection'}
+                ? "Sign in to access your account"
+                : "Create an account for upload your collection"}
             </p>
           </div>
-          <div className='m-7'>
+          <div className="m-7">
             <form onSubmit={submitHandler}>
-              <div className='mb-6'>
+              <div className="mb-6">
                 <label
-                  htmlFor='email'
-                  className='block mb-2 text-sm text-gray-600 dark:text-gray-400'
+                  htmlFor="email"
+                  className="block mb-2 text-sm text-gray-600 dark:text-gray-400"
                 >
                   Email Address
                 </label>
                 <input
-                  type='email'
-                  name='email'
-                  id='email'
-                  placeholder='you@example.com'
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="you@example.com"
                   required
                   ref={emailInputRef}
-                  className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                  className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
               </div>
-              <div className='mb-6'>
-                <div className='flex justify-between mb-2'>
+              <div className="mb-6">
+                <div className="flex justify-between mb-2">
                   <label
-                    htmlFor='password'
-                    className='text-sm text-gray-600 dark:text-gray-400'
+                    htmlFor="password"
+                    className="text-sm text-gray-600 dark:text-gray-400"
                   >
                     Password
                   </label>
@@ -139,42 +158,42 @@ const AuthForm = () => {
                   </a> */}
                 </div>
                 <input
-                  type='password'
-                  name='password'
-                  id='password'
-                  placeholder='Your Password'
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Your Password"
                   required
                   ref={passwordInputRef}
-                  className='w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500'
+                  className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-100 focus:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
               </div>
               {!isLogin && (
-                <div className='mb-6'>
+                <div className="mb-6">
                   <input
-                    type='checkbox'
-                    value='subscribe'
-                    className='mx-2 p-3'
+                    type="checkbox"
+                    value="subscribe"
+                    className="p-3 mx-2"
                     ref={subscribeInputRef}
                   />
                   <label
-                    htmlFor='subscribe'
-                    className='text-sm text-gray-600 dark:text-gray-400'
+                    htmlFor="subscribe"
+                    className="text-sm text-gray-600 dark:text-gray-400"
                   >
                     Subscribe Under Microscope mailing list
                   </label>
                 </div>
               )}
 
-              <div className='mb-6'>
-                <button className='w-full px-3 py-4 text-white bg-gray-600 rounded-md focus:bg-gray-700 focus:outline-none'>
-                  {isLogin ? 'Login' : 'Create Account'}
+              <div className="mb-6">
+                <button className="w-full px-3 py-4 text-white bg-gray-600 rounded-md focus:bg-gray-700 focus:outline-none">
+                  {isLogin ? "Login" : "Create Account"}
                 </button>
               </div>
-              <div className='text-green-700 w-full py-3'>{message}</div>
-              <div className='text-red-600 w-full py-3'>{loginError}</div>
+              <div className="w-full py-3 text-green-700">{message}</div>
+              <div className="w-full py-3 text-red-600">{loginError}</div>
 
-              <p className='text-sm text-center text-gray-400'>
-                Don&#x27;t have an account yet?{' '}
+              <p className="text-sm text-center text-gray-400">
+                Don&#x27;t have an account yet?{" "}
                 {/* <a
                   href='/register'
                   className='text-gray-800 focus:outline-none focus:underline focus:text-gray-500 dark:focus:border-gray-800 hover:underline'
@@ -183,13 +202,13 @@ const AuthForm = () => {
                 </a>
                 . */}
                 <button
-                  type='button'
+                  type="button"
                   onClick={switchAuthModeHandler}
-                  className='hover:underline text-gray-600'
+                  className="text-gray-600 hover:underline"
                 >
                   {isLogin
-                    ? 'Create new account'
-                    : 'Login with existing account'}
+                    ? "Create new account"
+                    : "Login with existing account"}
                 </button>
               </p>
             </form>
@@ -197,7 +216,7 @@ const AuthForm = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AuthForm
+export default AuthForm;
