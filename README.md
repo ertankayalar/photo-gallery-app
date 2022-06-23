@@ -8,6 +8,8 @@ This is a Photo Gallery App written with [Next.js](https://nextjs.org/) and requ
 -   **CSS**: [TailwindCSS](https://https://tailwindcss.com)
 -   **CMS**: [Strapi](https://www.strapi.io)
 
+Please review the [license](https://github.com/ertankayalar/LICENSE.txt) and remove all of my personal information (resume, blog posts, images, etc.).
+
 ## Getting Started
 
 First, run the development server:
