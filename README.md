@@ -3,6 +3,7 @@
 ![Ertan Kayalar](https://res.cloudinary.com/daqzk9ljd/image/upload/v1616234030/ek/author_qs0ytl.jpg)
 
 Ertan Kayalar
+
 [Full Stack Web Developer](https://ertankayalar.com)
 
 This is a Photo Gallery App written with [Next.js](https://nextjs.org/) and require backend Strapi & MongoDB databases.
